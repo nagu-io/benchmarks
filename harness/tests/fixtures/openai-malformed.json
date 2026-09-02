@@ -1,0 +1,19 @@
+{
+  "id": "synthetic-fixture-0002",
+  "object": "chat.completion",
+  "model": "synthetic-model-a",
+  "choices": [
+    {
+      "index": 0,
+      "finish_reason": "length",
+      "message": {
+        "role": "assistant",
+        "content": "Here is the extraction:\n{\"fields\": {\"invoice_number\": \"TST/26-27/0001\","
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 3120,
+    "completion_tokens": 32
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "result": {
+    "fields": {
+      "invoice_number": "TST/26-27/0001",
+      "invoice_date": "2026-01-15",
+      "currency": "INR",
+      "supplier_name": "Tinnara Fabrication LLP",
+      "invoice_total": "1250.00",
+      "taxable_value": "1000.00",
+      "total_tax": "250.00",
+      "line_items": [
+        {
+          "sl": 1,
+          "description": "Widget, synthetic",
+          "hsn_sac": "84811000",
+          "uom": "NOS",
+          "quantity": "10",
+          "unit_price": "100.00",
+          "amount": "1000.00"
+        }
+      ]
+    },
+    "confidence": {
+      "invoice_number": 0.97,
+      "invoice_date": 0.93,
+      "currency": 0.99,
+      "supplier_name": 0.88,
+      "invoice_total": 0.96,
+      "taxable_value": 0.91,
+      "total_tax": 0.72,
+      "line_items": 0.84
+    },
+    "model_version": "synthetic-pipeline@2026-01-01",
+    "pages_billed": 1
+  },
+  "request_id": "synthetic-0001"
+}
