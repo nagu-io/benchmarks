@@ -39,17 +39,34 @@ _HONORIFICS = (
     "maj", "rev", "hon", "sir", "madam", "mdm",
 )
 
-# Every non-ASCII character in this file is written as a \u escape, so the
-# source is pure ASCII and survives any transport that is not byte-exact.
-_CURRENCY_SYMBOLS = {
-    "₹": "INR", "rs": "INR", "rs.": "INR", "inr": "INR", "र": "INR",
-    "$": "USD", "us$": "USD", "usd": "USD",
-    "€": "EUR", "eur": "EUR",
-    "£": "GBP", "gbp": "GBP",
-    "₱": "PHP", "php": "PHP", "p": None,  # bare P is ambiguous, not mapped
-    "¥": "JPY", "jpy": "JPY",
-    "aed": "AED", "sgd": "SGD", "aud": "AUD", "cad": "CAD", "chf": "CHF",
+# The symbol table is written as code points, so this source file is pure ASCII
+# and no transport can reinterpret an escape. It is also the single place the
+# symbols are listed: the token pattern below is built from the same table.
+_SYMBOL_CODE_POINTS = {
+    0x20B9: "INR",   # rupee sign
+    0x0930: "INR",   # devanagari letter ra, used as a rupee abbreviation
+    0x20AC: "EUR",   # euro sign
+    0x00A3: "GBP",   # pound sign
+    0x20B1: "PHP",   # peso sign
+    0x00A5: "JPY",   # yen sign
 }
+
+_CURRENCY_SYMBOLS = {chr(cp): code for cp, code in _SYMBOL_CODE_POINTS.items()}
+_CURRENCY_SYMBOLS.update({
+    "rs": "INR", "rs.": "INR", "inr": "INR",
+    "$": "USD", "us$": "USD", "usd": "USD",
+    "eur": "EUR",
+    "gbp": "GBP",
+    "php": "PHP", "p": None,       # bare P is ambiguous, so it is not mapped
+    "jpy": "JPY",
+    "aed": "AED", "sgd": "SGD", "aud": "AUD", "cad": "CAD", "chf": "CHF",
+})
+
+# Characters that carry no glyph of their own, named by code point for the same
+# reason: a no-break space and a right single quotation mark used as a digit
+# separator.
+NBSP = chr(0x00A0)
+RIGHT_SINGLE_QUOTE = chr(0x2019)
 
 _TRUE = {"true", "t", "yes", "y", "1", "1.0", "on"}
 _FALSE = {"false", "f", "no", "n", "0", "0.0", "off"}
@@ -272,7 +289,8 @@ class Amount:
 
 
 _CURRENCY_TOKEN_RE = re.compile(
-    "[a-z$\\u20ac\\u00a3\\u20b9\\u20b1\\u00a5]+\\.?", re.IGNORECASE
+    "[a-z$" + "".join(chr(cp) for cp in _SYMBOL_CODE_POINTS) + r"]+\.?",
+    re.IGNORECASE,
 )
 
 
@@ -305,10 +323,11 @@ def parse_amount(text: str, *, decimal_separator: str | None = None) -> Amount:
     negative = ("(" in raw and ")" in raw) or bool(re.search(r"-\s*[\d.,]*\d", raw))
     # Take the numeric run itself, so a currency word such as "Rs." does not
     # leave a stray separator behind.
-    match = re.search("\\d[\\d.,\\s\\u00a0'\\u2019]*\\d|\\d", raw)
+    separators = NBSP + "'" + RIGHT_SINGLE_QUOTE
+    match = re.search(r"\d[\d.,\s" + separators + r"]*\d|\d", raw)
     if not match:
         return Amount(None, currency, currency is not None)
-    body = re.sub("[\\s\\u00a0'\\u2019]", "", match.group(0))
+    body = re.sub(r"[\s" + separators + "]", "", match.group(0))
     if not re.search(r"\d", body):
         return Amount(None, currency, currency is not None)
 
