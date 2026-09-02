@@ -1,0 +1,253 @@
+name: CI
+
+# Everything in this workflow runs with no network and no key.
+#
+# That is not a convenience. The harness must be runnable by a BPO engineer inside a locked
+# network before they trust a number from it, and a test that quietly reaches a provider
+# would hide a dependency on one. The `no-network` step below proves the property rather
+# than asserting it: it fails the build if an outbound connection succeeds after egress is
+# blocked.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  harness:
+    name: Harness tests, no network
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      # Installing needs the package index. Everything after this point does not.
+      - name: Install the harness and its test extras
+        working-directory: harness
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+
+      - name: Block outbound network
+        run: |
+          # Deny egress for the rest of the job, except loopback. A test that needs a
+          # provider will now fail loudly instead of passing quietly on someone's key.
+          sudo iptables -P OUTPUT DROP
+          sudo iptables -A OUTPUT -o lo -j ACCEPT
+          sudo iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+      - name: Prove there is no network
+        run: |
+          if timeout 5 python -c "import socket; socket.create_connection(('1.1.1.1', 443), 3)" 2>/dev/null; then
+            echo "Outbound network is still reachable. The no-network guarantee is not being tested."
+            exit 1
+          fi
+          echo "Egress blocked."
+
+      - name: Confirm no interface key is present
+        run: |
+          for var in OPENAI_API_KEY ANTHROPIC_API_KEY GOOGLE_API_KEY MISTRAL_API_KEY \
+                     AWS_ACCESS_KEY_ID AZURE_DOCUMENT_INTELLIGENCE_KEY \
+                     GOOGLE_APPLICATION_CREDENTIALS HC_CUSTOMER_KEY HC_JUDGE_KEY; do
+            if [ -n "${!var:-}" ]; then
+              echo "$var is set in CI. These tests must run without a key."
+              exit 1
+            fi
+          done
+          echo "No interface key is set."
+
+      - name: Tests
+        working-directory: harness
+        run: pytest -q
+
+      - name: CLI smoke test
+        working-directory: harness
+        run: |
+          entail-bench --version
+          entail-bench list-models
+          # Reads entail-bench.yaml from the working directory and calls nothing.
+          entail-bench validate-config
+
+  datasets:
+    name: Dataset validation, no network
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install what the generators need
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Block outbound network
+        run: |
+          sudo iptables -P OUTPUT DROP
+          sudo iptables -A OUTPUT -o lo -j ACCEPT
+          sudo iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+      # Determinism is the property that makes a published figure checkable: regenerating
+      # from the seed must reproduce the committed ground truth byte for byte. The identifier
+      # check is the one that protects a real person: every identifier in these sets is
+      # format-valid and checksum-invalid by construction, and validate.py fails if one is not.
+      - name: Exception Economics — regenerate from the seed and validate
+        working-directory: datasets/exception-economics
+        run: |
+          python3 generate.py --seed 20260902
+          git diff --exit-code -- ground-truth.jsonl manifest.json sample/
+          python3 validate.py
+
+      - name: Honest Containment — validate
+        working-directory: datasets/honest-containment
+        run: python3 validate.py
+
+      # The rendered documents are not in the repository, so the render checks report a
+      # note and pass. --strict-render is for a working tree that has run render.py.
+      - name: Messy Scan — validate the ground truth
+        working-directory: datasets/messy-scan
+        run: python3 validate.py
+
+  results:
+    name: Results are reproducible from the committed JSON
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install pyyaml
+
+      - name: Block outbound network
+        run: |
+          sudo iptables -P OUTPUT DROP
+          sudo iptables -A OUTPUT -o lo -j ACCEPT
+          sudo iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+      # Every markdown table in the Exception Economics results folder is written by
+      # report.py from the two JSON files. If a figure in a report has been edited by hand,
+      # this step fails, which is the point.
+      - name: Rebuild the Exception Economics reports from their JSON
+        working-directory: datasets/exception-economics
+        run: |
+          python3 report.py --results ../../results/exception-economics-v1.0
+          git diff --exit-code -- ../../results/exception-economics-v1.0
+
+  no-estimated-figures:
+    name: No estimated figure in a results table
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Charter 3.1.8: a figure with no run is written "not run" with the reason. It is never
+      # estimated, extrapolated or illustrated. These greps are a blunt instrument and they
+      # will not catch everything, but they catch the words people reach for when they are
+      # about to publish a figure nobody measured.
+      - name: Look for hedging words beside a number
+        run: |
+          set +e
+          pattern='(approximately|roughly|around|circa|about|estimated|projected|expected|illustrative|indicative|typical|~)[[:space:]]*[0-9]'
+          hits=$(grep -rEin --include='*.md' "$pattern" results/ | grep -v 'arithmetic example')
+          if [ -n "$hits" ]; then
+            echo "A results file appears to carry an estimated figure:"
+            echo "$hits"
+            echo
+            echo "Charter 3.1.8: write 'not run' with the reason instead."
+            exit 1
+          fi
+          echo "No estimated figures found in results/."
+
+      # A table full of "not run" cells is fine; the reason sits in the row's status column
+      # or in the section above it. What is not fine is a file that says "not run" and never
+      # says why. This checks at file granularity, which is where the reason has to live.
+      - name: Every file that reports not run also carries the reason
+        run: |
+          bad=0
+          for f in $(grep -rl --include='*.md' 'not run' results/ || true); do
+            if ! grep -qEi 'not run [—-]|reason|status' "$f"; then
+              echo "$f reports 'not run' and never says why"
+              bad=1
+            fi
+          done
+          [ "$bad" = 0 ] || { echo "Charter 3.1.8: a figure with no run is written 'not run' with the reason."; exit 1; }
+          echo "Every file reporting not run carries a reason."
+
+      # A placeholder is a decision nobody has made. It belongs in a charter or a template,
+      # never in a published results table.
+      - name: No filler in a results table
+        run: |
+          if grep -rniE --include='*.md' '\b(tbd|coming soon|to be confirmed|xxx)\b' results/; then
+            echo "A results file carries filler text."
+            exit 1
+          fi
+          echo "No filler in results/."
+
+  lint:
+    name: Repository lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Required files are present
+        run: |
+          missing=0
+          for f in README.md CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md LICENSE \
+                   LICENSE-DATA CITATION.cff LAYOUT.md datasets/LICENSE \
+                   charter/methodology.md charter/contract-clauses.md; do
+            [ -f "$f" ] || { echo "missing: $f"; missing=1; }
+          done
+          exit $missing
+
+      - name: The citation file parses
+        uses: citation-file-format/cffconvert-github-action@2.0.0
+        with:
+          args: --validate
+
+      - name: The issue templates parse
+        run: |
+          python3 - <<'PY'
+          import sys, glob
+          try:
+              import yaml
+          except ImportError:
+              sys.exit("PyYAML is needed for this step")
+          for path in glob.glob(".github/ISSUE_TEMPLATE/*.yml"):
+              with open(path) as fh:
+                  yaml.safe_load(fh)
+              print(f"ok: {path}")
+          PY
+
+      - name: No key, no partner data, no internal path
+        run: |
+          set +e
+          # A key-shaped string committed by accident, and the internal working-tree path.
+          hits=$(grep -rEn "(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|EntailmentLabs/(0[0-9]|99)-)" \
+                 --exclude-dir=.git . )
+          if [ -n "$hits" ]; then
+            echo "$hits"
+            echo "Something that looks like a key or an internal path is committed."
+            exit 1
+          fi
+          echo "Clean."
