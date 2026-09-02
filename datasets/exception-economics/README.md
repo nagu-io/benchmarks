@@ -134,7 +134,7 @@ figure it was excluded from.
 
 | Split | Items | Published |
 |---|---|---|
-| `public_sample` | 100 | Yes, in `sample/`, committed in parts — see `sample/README.md` |
+| `public_sample` | 100 | Yes — rebuilt into `sample/` by the generator, with a four-item `preview.jsonl` committed. See `sample/README.md` |
 | `private_holdout` | 300 | No. Never |
 | `open` | 1,600 | Regenerable from the seed |
 
@@ -204,7 +204,7 @@ It is a simulation everywhere it appears, in the table, the chart and the prose.
 | `validate.py` | Every check that has to pass before a number leaves this folder |
 | `ground-truth.jsonl` | The 2,000 items. Rebuilt from the seed rather than committed; hash in the repository's `REGENERATED.md` |
 | `manifest.json` | Counts, mixes, drift steps, reference-policy parameters, ground-truth hash |
-| `sample/ground-truth.part-*.jsonl` | The 100-item public sample. `cat` the parts to rebuild the file; `sample/README.md` gives the hash |
+| `sample/preview.jsonl` | Four items from the public sample, committed verbatim. The full 100-item sample is rebuilt by the generator; `sample/README.md` gives both hashes |
 | `datasheet.md` | Datasheets for Datasets, following Gebru et al. |
 | `MANIFEST.md` | Splits, drift steps and the reasoning behind both |
 

@@ -59,7 +59,7 @@ Total 2,000 items.
 
 | Split | Items | Published |
 |---|---|---|
-| `public_sample` | 100 | Yes, in `sample/`, committed in parts — see `sample/README.md` |
+| `public_sample` | 100 | Yes — rebuilt into `sample/` by the generator, with a four-item `preview.jsonl` committed. See `sample/README.md` |
 | `private_holdout` | 300 | No. Never published, per charter 5.10 |
 | `open` | 1,600 | Not materialised separately; regenerable from the seed |
 
