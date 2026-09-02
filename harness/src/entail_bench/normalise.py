@@ -269,7 +269,10 @@ class Amount:
     currency_stated: bool
 
 
-_CURRENCY_TOKEN_RE = re.compile(r"[a-z$€£₹₱¥]+\.?", re.IGNORECASE)
+# Currency symbols are written as escapes so this source file stays ASCII.
+_CURRENCY_TOKEN_RE = re.compile(
+    "[a-z$\\u20ac\\u00a3\\u20b9\\u20b1\\u00a5]+\\.?", re.IGNORECASE
+)
 
 
 def parse_amount(text: str, *, decimal_separator: str | None = None) -> Amount:
@@ -301,10 +304,10 @@ def parse_amount(text: str, *, decimal_separator: str | None = None) -> Amount:
     negative = ("(" in raw and ")" in raw) or bool(re.search(r"-\s*[\d.,]*\d", raw))
     # Take the numeric run itself, so a currency word such as "Rs." does not
     # leave a stray separator behind.
-    match = re.search(r"\d[\d.,\s '’]*\d|\d", raw)
+    match = re.search("\\d[\\d.,\\s\\u00a0'\\u2019]*\\d|\\d", raw)
     if not match:
         return Amount(None, currency, currency is not None)
-    body = re.sub(r"[\s '’]", "", match.group(0))
+    body = re.sub("[\\s\\u00a0'\\u2019]", "", match.group(0))
     if not re.search(r"\d", body):
         return Amount(None, currency, currency is not None)
 
