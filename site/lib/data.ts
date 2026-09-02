@@ -1,7 +1,11 @@
 /**
  * The build-time read of `data/benchmarks.json`, which `scripts/build-data.mjs` writes
- * from the repository root. Every figure on this site comes through here. Nothing in the
- * page components holds a number of its own.
+ * from the repository root. Every figure on this site comes through here. Nothing in `app/`
+ * or `components/` contains a figure, and nothing here invents one: a value that is not
+ * present in a source file is emitted as null and rendered as "not run" with the reason
+ * the source gives, per charter 3.1.8.
+ *
+ * Run by `pnpm build` (prebuild) and `pnpm dev` (predev). Never edit data/benchmarks.json.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -36,6 +40,12 @@ export type Dimension = { key: string; label: string; count: number | null };
 
 export type Dataset = {
   present: boolean;
+  /**
+   * Which file the counts were read from: the regenerated ground truth when the build ran
+   * beside it, or the committed manifest and datasheet when it ran from a clone. The two
+   * agree; the field exists so a page can say which, rather than leaving a reader to guess.
+   */
+  countedFrom?: string;
   version?: string | null;
   seed?: number | string | null;
   unit?: string;
