@@ -1,0 +1,77 @@
+# Recorded dry-run fixture — SYNTHETIC, NOT A RESULT
+#
+# This file drives `entail-bench run --dry-run`. Its purpose is to exercise the
+# whole path — prompt rendering, adapter contract, parsing, scoring, queue,
+# calibration, cost, latency, charts, report — with no network and no key.
+#
+# It deliberately does NOT encode a plausible accuracy profile. There is no
+# per-tier error rate here, no confidence distribution taken from anything, and
+# no figure a reader could mistake for a measurement of any system. The pattern
+# below is arithmetic: every nth field instance is spoiled, on a fixed cycle.
+# Any number a dry run produces is an artefact of that cycle and of nothing
+# else. Charter section 3.1.8 and 10.4.
+#
+# A dry run writes to results/<suite>-v<version>/dry-run-fixture/<timestamp>/ and
+# every file it writes carries `synthetic: true`. The leaderboard builder refuses
+# a synthetic run.
+
+fixture_version: "1.0.0"
+synthetic: true
+is_result: false
+label: "dry-run-fixture"
+warning: >-
+  Synthetic fixture. Not a model, not a measurement, not a result. Nothing this
+  fixture produces may be quoted, charted outside its own dry-run folder, or
+  entered into a leaderboard.
+
+# The spoiling cycle, applied over the field instances of a document in schema
+# order. Position is the zero-based index of the instance within the document.
+pattern:
+  wrong_every_nth: 7          # position % 7 == 3 -> replaced with the marker below
+  wrong_offset: 3
+  drop_every_nth: 11          # position % 11 == 5 -> key omitted from the reply
+  drop_offset: 5
+  wrong_value_marker: "SYNTHETIC-FIXTURE-WRONG-VALUE"
+  extra_field_name: "synthetic_fixture_extra_field"
+  extra_field_value: "SYNTHETIC-FIXTURE-EXTRA-FIELD"
+
+# Confidence is a fixed arithmetic ramp over the instance position, not a
+# distribution. It exists so the calibration code has something to bin.
+confidence:
+  base: 0.62
+  step: 0.037
+  ceiling: 0.99
+
+# Fixed per-document latency ramp, in seconds. Not a measurement of anything.
+latency:
+  base_s: 0.85
+  step_s: 0.11
+  cycle: 9
+
+# Token counts, so the cost path is exercised. Arithmetic, not observed.
+tokens:
+  input_per_page: 1500
+  output_base: 400
+  output_per_field: 12
+
+# Recorded raw payloads, replayed at fixed positions in the document order, so
+# the failure branches are exercised on every dry run.
+recorded_events:
+  - at_index: 4
+    kind: parse_error
+    raw_text: |
+      Here is the extraction you asked for:
+      {"fields": {"invoice_number": "TI/25-26/7822", "invoice_total": 483265.00,
+    note: "Truncated JSON. Exercises the FAIL branch for an unparseable reply."
+  - at_index: 9
+    kind: call_error
+    error: "synthetic fixture: recorded provider error, 503 service unavailable"
+    note: "Exercises the retries-exhausted branch and the failure-time line."
+  - at_index: 14
+    kind: no_confidence
+    note: >-
+      Reply with fields but no confidence object. Exercises the
+      unscored-for-calibration line and the LOWCONF-not-available note.
+  - at_index: 19
+    kind: extra_field
+    note: "Adds one field outside the schema. Exercises the out-of-schema line."
