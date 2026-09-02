@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Local run output. Published results live in 10-benchmarks/results/.
+results/
+
+# Generated page images for the tiny test dataset. Rebuilt by
+# tests/fixtures/tiny-dataset/make-pages.py, which conftest.py calls.
+tests/fixtures/tiny-dataset/documents/*/*.png

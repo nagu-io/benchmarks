@@ -1,0 +1,52 @@
+# entail-bench configuration for this repository.
+#
+# `entail-bench` picks this up when it is run from harness/. A partner copies
+# config.example.yaml instead and points `dataset` at their own documents.
+
+suite: messy-scan
+dataset: ../datasets/messy-scan
+split: public_sample
+prompt: messy-scan-v1.0.0.md
+prices: ./prices.yaml
+
+# Real runs land in 10-benchmarks/results/<suite>-v<dataset version>/<model>/.
+out: ../results
+
+runs: 3
+spend_cap: null                 # set before a run that calls a paid interface
+
+# No model has a model_id set. Which model version is in scope is a decision a
+# person makes before a run, and inventing one here would put a version string
+# into a report that nobody chose (charter 10.3).
+models:
+  - name: openai
+  - name: anthropic
+  - name: google
+  - name: mistral
+  - name: local-vllm
+  - name: aws-textract
+  - name: azure-document-intelligence
+    model_id: prebuilt-document
+  - name: google-document-ai
+  - name: entail-pipeline
+
+scoring:
+  confidence_threshold: 0.85
+  calibration_bins: 10
+  audit_rate: 0.0
+  audit_seed: entail-bench
+  currency_required: true
+  numeric_tolerance: null
+  required_fields: all
+  validation: true
+
+adapter_options:
+  max_output_tokens: 4096
+  temperature: 0
+  timeout_s: 180
+  max_retries: 2
+  retry_backoff_s: 1.0
+  image_detail: high
+
+admission:
+  reject_rules: []
