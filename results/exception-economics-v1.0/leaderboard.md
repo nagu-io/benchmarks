@@ -244,3 +244,4 @@ Threshold 0.95. Open exposure items: 0.
 The INR and USD rates are two independent placeholders. No exchange rate is applied between them anywhere in the scorer, and none should be inferred from the two figures sitting beside each other. Machine cost is zero because no system has been run, so no measured cost per item exists; every net cost figure in this report is therefore labour only.
 
 Every minute figure in the labour model is a modelling assumption and each one states its basis in `labour-model.yaml`. Not one was measured by a time study, ours or anyone else's. `validate.py` fails the build if a minute figure appears without a basis, or if a money figure appears without the placeholder mark.
+
