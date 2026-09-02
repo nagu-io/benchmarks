@@ -1,11 +1,7 @@
 /**
  * The build-time read of `data/benchmarks.json`, which `scripts/build-data.mjs` writes
- * from the repository root. Every figure on this site comes through here. Nothing in `app/`
- * or `components/` contains a figure, and nothing here invents one: a value that is not
- * present in a source file is emitted as null and rendered as "not run" with the reason
- * the source gives, per charter 3.1.8.
- *
- * Run by `pnpm build` (prebuild) and `pnpm dev` (predev). Never edit data/benchmarks.json.
+ * from the repository root. Every figure on this site comes through here. Nothing in the
+ * page components holds a number of its own.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
