@@ -4,10 +4,10 @@ Which folders of the internal working tree `10-benchmarks/` map to which paths i
 `nagu-io/benchmarks`, and which artefacts are deliberately kept out.
 
 The rule behind every decision below: **anything that a seed and a script can rebuild does
-not go in git.** The repository holds what a reader has to trust — the generators, the ground
-truth, the schemas, the manifests, the hashes, the harness and the results — and nothing it
-can produce for itself. That is why a 2.1 GB working tree publishes as a repository of a few
-tens of megabytes, and why a clone is enough to reproduce every published figure.
+not go in git.** The repository holds what a reader has to trust — the generators, the
+schemas, the manifests, the hashes, the harness, the charter and the results — and nothing it
+can produce for itself. That is why a 2.1 GB working tree publishes as a repository of under
+two megabytes, and why a clone is enough to reproduce every published figure.
 
 ---
 
@@ -19,17 +19,18 @@ tens of megabytes, and why a clone is enough to reproduce every published figure
 | `charter/contract-clauses.md` | `charter/contract-clauses.md` | Yes, whole |
 | `harness/` | `harness/` | Yes, except `.pytest_cache/`, `__pycache__/`, `*.egg-info/` |
 | `datasets/<suite>/*.py` | `datasets/<suite>/*.py` | Yes — generators, renderers, degraders, scorers, drift, validators |
-| `datasets/<suite>/ground-truth.jsonl` | same path | Yes |
-| `datasets/<suite>/manifest.json`, `MANIFEST.md` | same path | Yes |
+| `datasets/<suite>/ground-truth.jsonl` | — | No — rebuilt from the seed. Sizes and hashes in `REGENERATED.md`; see 2.6 |
+| `datasets/<suite>/manifest.json`, `MANIFEST.md` | same path | Yes — both are small and a reader wants them without running a generator |
 | `datasets/<suite>/datasheet.md`, `README.md` | same path | Yes |
 | `datasets/honest-containment/policies/` | same path | Yes — 38 policy documents, the agent's whole world |
-| `datasets/honest-containment/transcripts/` | same path | Yes — 1.8 MB of text |
+| `datasets/honest-containment/transcripts/` | — | No — 300 files, 1.3 MB, rebuilt from the seed. `manifest.json` carries the combined hash; see 2.6 |
 | `datasets/honest-containment/audio-specs.jsonl`, `audio-manifest.jsonl` | — | No — both are rebuilt from the seed. Their sizes and hashes are in `REGENERATED.md`; see 2.6 |
 | `datasets/honest-containment/labelling/` | same path | Yes — the guide, the adjudication set, the kappa script |
 | `datasets/exception-economics/labour-model.yaml` | same path | Yes |
-| `datasets/<suite>/sample/ground-truth.jsonl` | same path | Yes |
+| `datasets/<suite>/sample/preview.jsonl` | same path | Yes — a few records committed verbatim, so the shape of one can be read without running anything |
+| `datasets/<suite>/sample/ground-truth.jsonl` | — | No — rebuilt with the split. `sample/README.md` gives the hash |
 | `day-60/` | `day-60/` | Yes, whole — rubric, scripted incidents, scoresheet, self-assessment |
-| `results/` | `results/` | Yes, except the five files in 2.6 — leaderboards, findings, reproduce, the scored JSON, the run records |
+| `results/` | `results/` | Yes, except the seven files in 2.6 — leaderboards, findings, definitions, reproduce, the run headers |
 | `notes/*.mdx`, `notes/release-checklist.md` | — | No. Research notes publish on the main site; the release checklist is internal |
 | `site/` | — | No. The site is deployed, not published as source, and its `repo-template/` is this file's own source |
 | `.agent-context.md`, `BENCHMARK-PACK.md` | — | No. Internal build instructions |
@@ -51,7 +52,7 @@ Neither is committed. Both are rebuilt:
 
 ```bash
 cd datasets/messy-scan
-python3 generate.py --seed 20260902   # writes ground-truth.jsonl and manifest
+python3 generate.py --seed 20260902   # writes build/documents.jsonl, the plan
 python3 render.py                     # writes build/
 python3 degrade.py                    # writes documents/
 python3 validate.py
@@ -73,7 +74,7 @@ Not committed. Rebuilt with `python3 tts.py` from the seed.
 The two files that describe it are not committed either, for the reason in 2.6, but both are
 rebuilt by the same command: `audio-specs.jsonl`, the 120 specifications with language
 condition, accent, noise bed, target signal-to-noise ratio and turn text, and
-`audio-manifest.jsonl`, 644 KB carrying the per-file SHA-256 and the *measured* signal-to-noise
+`audio-manifest.jsonl`, 642 KB carrying the per-file SHA-256 and the *measured* signal-to-noise
 ratio for every one of the 970 files. `validate.py --strict-audio` checks a rebuild against the
 hashes in the manifest it has just rebuilt, so the check is of internal consistency; the
 SHA-256 in `REGENERATED.md` is what ties a rebuild back to the copy described here.
@@ -84,7 +85,7 @@ SHA-256 in `REGENERATED.md` is what ties a rebuild back to the copy described he
 |---|---|---|---|
 | `datasets/messy-scan/private/` | 200 documents | Internal only | **No. Never.** |
 | `datasets/honest-containment/private/scenarios.jsonl` | 60 scenarios | Internal only | **No. Never.** |
-| Exception Economics private holdout | 300 items | Marked by the `split` field in the committed ground truth | See the note below |
+| Exception Economics private holdout | 300 items | Marked by the `split` field in the regenerated ground truth | See the note below |
 
 The first two are excluded from the public repository entirely, including their ground truth.
 They exist for one comparison: the gap between a system's score on the public sample and its
@@ -92,11 +93,12 @@ score on the private split. Publishing them would destroy the only detection met
 charter has for tuning against the public set.
 
 Exception Economics is the exception, and the reason is worth stating plainly. Its ground
-truth is a single committed file in which each item carries a `split` field, and the private
-holdout is a slice of it rather than a separate file. That means its holdout is visible to
-anyone who reads the file. It is therefore not a defence against tuning, and no claim is made
-that it is. If that matters for a future release, splitting the file is a major dataset
-version.
+truth is a single file in which each item carries a `split` field, and the private holdout is
+a slice of it rather than a separate file. The file itself is rebuilt rather than committed,
+but that changes nothing here: `generate.py` and the published seed are in the repository, so
+anyone can produce the file and read which 300 items are the holdout. It is therefore not a
+defence against tuning, and no claim is made that it is. If that matters for a future release,
+drawing the holdout from a seed that is not published is a major dataset version.
 
 ### 2.4 Caches and build junk
 
@@ -115,24 +117,44 @@ reading `placeholder`.
 
 ### 2.6 Large regenerable data files
 
-Six files are rebuilt rather than committed, for the reason that governs every other exclusion
-above: a seed and a committed script reproduce them exactly, so the repository holds the script
-and the hash instead of the output.
+Fifteen paths are rebuilt rather than committed, for the reason that governs every other
+exclusion above: a seed and a committed script reproduce them exactly, so the repository holds
+the script and the hash instead of the output.
 
 | Path | Bytes | Rebuilt by |
-|---|---|---|
-| `datasets/messy-scan/ground-truth.jsonl` | 4,999,001 | `generate.py --seed 20260902` |
+|---|---:|---|
+| `datasets/messy-scan/ground-truth.jsonl` | 4,999,001 | `generate.py --seed 20260902`, then `render.py` and `degrade.py` |
+| `datasets/exception-economics/ground-truth.jsonl` | 3,175,920 | `generate.py --seed 20260902` |
+| `datasets/honest-containment/scenarios.jsonl` | 1,584,548 | `generate.py --seed 20260902` |
+| `datasets/honest-containment/transcripts/` | 1,282,354 in 300 files | `generate.py --seed 20260902` |
+| `datasets/honest-containment/audio-manifest.jsonl` | 657,860 | `tts.py` |
 | `results/exception-economics-v1.0/drift.json` | 491,275 | `drift.py` |
-| `results/honest-containment-v1.0/runs/*/run-1/contacts.jsonl` | 190,152 to 292,452 each | the same command that would perform a run |
+| `results/honest-containment-v1.0/runs/voice-platform-a/run-1/contacts.jsonl` | 292,452 | the same command that would perform a run |
+| `results/honest-containment-v1.0/runs/voice-platform-b/run-1/contacts.jsonl` | 292,452 | the same command that would perform a run |
+| `datasets/messy-scan/sample/ground-truth.jsonl` | 244,734 | `generate.py`, `render.py --select public_sample`, `degrade.py` |
 | `datasets/honest-containment/audio-specs.jsonl` | 218,373 | `generate.py --seed 20260902` |
-| `datasets/honest-containment/audio-manifest.jsonl` | 644 KB | `tts.py` |
+| `results/honest-containment-v1.0/runs/entailment-agent/run-1/contacts.jsonl` | 191,352 | the same command that would perform a run |
+| `results/honest-containment-v1.0/runs/general-llm/run-1/contacts.jsonl` | 190,152 | the same command that would perform a run |
+| `datasets/exception-economics/sample/ground-truth.jsonl` | 159,359 | `generate.py --seed 20260902` |
+| `results/exception-economics-v1.0/scores-baseline.json` | 45,248 | `score.py` |
+| `results/exception-economics-v1.0/scores-all.json` | 29,861 | `score.py --population all` |
 
-`REGENERATED.md` carries the SHA-256 of every one, so a rebuild is checked rather than trusted,
-and it states plainly the second reason these particular files fell outside the line: the commit
-that created this repository was made through an interface that carries text one batch at a
-time. Nothing a reader needs to verify a published figure is affected — the generators, the
-schemas, the manifests, the harness, the charter and the results are all here — but the
-constraint is recorded rather than dressed up as a design choice alone.
+`transcripts/` is the one directory rather than a file. `manifest.json` records the SHA-256 of
+its 300 files concatenated in sorted order, so `find transcripts -type f | sort | xargs cat |
+sha256sum` checks a rebuild in one line.
+
+What is committed instead, so that nothing a reader needs is behind a generator: every
+generator, scorer, validator and harness file; `manifest.json` and `MANIFEST.md` for each
+dataset, which name every item and carry the ground-truth hash; a `sample/preview.jsonl` of a
+few records per dataset, committed verbatim; and every results page, which carries the figures
+themselves rather than the JSON they were read from.
+
+`REGENERATED.md` carries the SHA-256 of every file in the table, so a rebuild is checked rather
+than trusted, and it states plainly the second reason these particular files fell outside the
+line: the commit that created this repository was made through an interface that carries text
+one batch at a time. Nothing a reader needs to verify a published figure is affected — the
+generators, the schemas, the manifests, the harness, the charter and the results are all here —
+but the constraint is recorded rather than dressed up as a design choice alone.
 
 The four `contacts.jsonl` files are the per-contact records of a run that did not happen: every
 row carries `not run` and the reason. They will be replaced the first time a run occurs.
@@ -168,15 +190,18 @@ contents are covered by `MANIFEST.md` in its dataset folder.
 | Messy Scan public sample images | 60 MB | 0 — a release asset |
 | Honest Containment audio | 79 MB | 0 — rebuilt |
 | Messy Scan `ground-truth.jsonl` | 4.8 MB | 0 — rebuilt, hash in `REGENERATED.md` |
-| Exception Economics `ground-truth.jsonl` | 3.1 MB | 3.1 MB |
-| Honest Containment `scenarios.jsonl` | 1.6 MB | 0 — rebuilt, hash in `REGENERATED.md` |
-| Honest Containment `audio-manifest.jsonl` | 644 KB | 0 — rebuilt, hash in `REGENERATED.md` |
-| `harness/` | 1.5 MB | 1.5 MB |
-| `results/` | 1.7 MB | 460 KB — the five files in 2.6 are rebuilt |
-| `day-60/` | 80 KB | 80 KB |
-| `charter/` | 140 KB | 140 KB |
+| Exception Economics `ground-truth.jsonl` | 3.0 MB | 0 — rebuilt, hash in `REGENERATED.md` |
+| Honest Containment `scenarios.jsonl` | 1.5 MB | 0 — rebuilt, hash in `REGENERATED.md` |
+| Honest Containment `transcripts/` | 1.3 MB | 0 — rebuilt, hash in `manifest.json` |
+| Honest Containment `audio-manifest.jsonl` | 642 KB | 0 — rebuilt, hash in `REGENERATED.md` |
+| The two `sample/ground-truth.jsonl` files | 395 KB | 0 — rebuilt; a `preview.jsonl` of a few records is committed |
+| `results/` | 1.6 MB | 85 KB — the seven files in 2.6 are rebuilt |
+| `harness/` | 422 KB | 402 KB |
+| `datasets/` source, manifests, policies and labelling | 13 MB | 985 KB |
+| `charter/` | 142 KB | 142 KB |
+| `day-60/` | 75 KB | 75 KB |
 
-Roughly 2.1 GB of working tree, of which about 4 MB is committed.
+Roughly 2.1 GB of working tree, of which about 1.8 MB is committed.
 
 ---
 
