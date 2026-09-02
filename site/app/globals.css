@@ -1,0 +1,867 @@
+@import "tailwindcss";
+
+/* tokens:start — generated from the Entailment Labs brand token set, which lives with the
+   marketing site and is the single source for both sites. Do not edit by hand. */
+@theme static {
+  /* Entailment Labs tokens v1.0.0, updated 2026-09-01. */
+  --meta-version: "1.0.0";
+  --meta-updated: "2026-09-01";
+  /* colour */
+  --color-paper: #E4E8EA;
+  --color-ink: #1C2329;
+  --color-yellow: #F5E9A0;
+  --color-red: #B8321A;
+  --color-rule: #B7BEC3;
+  --color-annotation-on-paper: #585E63;
+  --color-annotation-on-ink: #A8ADB0;
+  --color-ink-hover: #33393E;
+  --color-paper-hover: #D9DEE1;
+  --color-ink-alpha70: rgba(28, 35, 41, 0.7);
+  --color-paper-alpha70: rgba(228, 232, 234, 0.7);
+  /* type */
+  --font-sans: "IBM Plex Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-condensed: "IBM Plex Sans Condensed", "IBM Plex Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --text-14: 14px;
+  --text-14--font-family: var(--font-sans);
+  --text-14--font-weight: 400;
+  --text-14--line-height: 1.4;
+  --text-14--color: var(--color-annotation-on-paper);
+  --text-17: 17px;
+  --text-17--font-family: var(--font-sans);
+  --text-17--font-weight: 400;
+  --text-17--line-height: 1.55;
+  --text-17--max-measure: 68ch;
+  --text-20: 20px;
+  --text-20--font-family: var(--font-sans);
+  --text-20--font-weight: 400;
+  --text-20--line-height: 1.5;
+  --text-28: 28px;
+  --text-28--font-family: var(--font-condensed);
+  --text-28--font-weight: 500;
+  --text-28--line-height: 1.2;
+  --text-28--letter-spacing: 0;
+  --text-40: 40px;
+  --text-40--font-family: var(--font-condensed);
+  --text-40--font-weight: 500;
+  --text-40--line-height: 1.1;
+  --text-40--letter-spacing: -0.01em;
+  --text-64: 64px;
+  --text-64--font-family: var(--font-condensed);
+  --text-64--font-weight: 500;
+  --text-64--line-height: 1;
+  --text-64--letter-spacing: -0.02em;
+  --text-96: 96px;
+  --text-96--font-family: var(--font-condensed);
+  --text-96--font-weight: 500;
+  --text-96--line-height: 0.98;
+  --text-96--letter-spacing: -0.02em;
+  --text-ui: 15px;
+  --text-ui--font-family: var(--font-sans);
+  --text-ui--font-weights: 400, 500;
+  --text-ui--line-height: 1.4;
+  --text-wordmark: 22px;
+  --text-wordmark--font-family: var(--font-condensed);
+  --text-wordmark--font-weight: 500;
+  --text-wordmark--letter-spacing: -0.01em;
+  --text-article: 18px;
+  --text-article--line-height: 1.6;
+  --text-article--measure: 660px;
+  /* not used anywhere: monospace, italic, all-caps, eyebrow labels */
+  /* space */
+  --spacing-1: 8px;
+  --spacing-2: 16px;
+  --spacing-3: 24px;
+  --spacing-4: 32px;
+  --spacing-5: 40px;
+  --spacing-6: 48px;
+  --spacing-8: 64px;
+  --spacing-12: 96px;
+  --spacing-base: 8px;
+  --spacing-section-desktop: 96px;
+  --spacing-section-mobile: 64px;
+  --spacing-gutter: 24px;
+  --spacing-mobile-margin: 20px;
+  /* grid */
+  --grid-columns: 12;
+  --grid-max-width: 1280px;
+  --grid-reading-column: 2 / span 7;
+  --grid-reading-column--width: 737px;
+  --grid-rail: 10 / span 3;
+  --grid-rail--width: 302px;
+  --grid-mobile-breakpoint: 375px;
+  /* radius */
+  --radius-input: 2px;
+  --radius-card: 2px;
+  --radius-button: 2px;
+  /* border */
+  --border-hairline: 1px solid #B7BEC3;
+  --border-focus-ring: 2px solid #1C2329;
+  --border-focus-ring--offset: 2px;
+  --border-focus-ring-on-ink: 2px solid #E4E8EA;
+  --border-focus-ring-on-ink--offset: 2px;
+  --border-margin-stroke: 2px solid #B8321A;
+  /* control */
+  --control-height: 44px;
+  --control-button-font: 15px/1.4 sans 500;
+  /* motion */
+  --motion-rule: "Only motion that answers an action, plus the one hero sequence. No scroll-reveal, hover lift, parallax, shimmer, loops or autoplay outside the hero. prefers-reduced-motion: hero shows final state, every other transition is instant.";
+  --ease-brand: cubic-bezier(0.2, 0, 0, 1);
+  --motion-easing: cubic-bezier(0.2, 0, 0, 1);
+  --motion-hero-trigger: "page load, once; Replay link";
+  --motion-hero-total: 4000ms;
+  --motion-hero-field: 250ms, staggered 350ms;
+  --motion-hero-review-slide: 400ms;
+  --motion-hero-return: 400ms;
+  --motion-hero-delivery: 600ms;
+  --motion-accordion: 200ms ease-out;
+  --motion-drawer: 240ms ease-out;
+  --motion-row-expand: 160ms ease-out;
+  --motion-link-hover: 0ms, underline 1px to 2px;
+  --motion-button-hover: 120ms linear;
+}
+/* tokens:end */
+
+/* Derived, not tokens. --rule-on-ink is rule grey at 45%; --card-paper is paper at 50% over white. */
+:root {
+  --rule-on-ink: rgba(183, 190, 195, 0.45);
+  --card-paper: #f1f3f4;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    scroll-padding-top: 72px;
+  }
+  body {
+    margin: 0;
+    font-family: var(--font-plex-sans), var(--font-sans);
+    font-size: 17px;
+    line-height: 1.55;
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  .condensed {
+    font-family: var(--font-plex-condensed), var(--font-condensed);
+    font-weight: 500;
+    margin: 0;
+  }
+  p {
+    margin: 0;
+  }
+  button {
+    font: inherit;
+    color: inherit;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0ms !important;
+      animation-duration: 0ms !important;
+    }
+  }
+}
+
+/* Type roles. The benchmark site is the marketing site's system one notch plainer:
+   the 96px display is not used here, and the page title is the largest thing on a page. */
+.page-title {
+  font-size: clamp(40px, 4vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.h-section {
+  font-size: clamp(28px, 2.6vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.h-title {
+  font-size: 22px;
+  line-height: 1.2;
+}
+.h-sub {
+  font-size: 18px;
+  line-height: 1.25;
+}
+.lead {
+  font-size: 20px;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+.body {
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+.note {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+}
+.ui {
+  font-size: 15px;
+  line-height: 1.4;
+}
+.stroke {
+  padding-left: 12px;
+  border-left: 2px solid var(--color-red);
+}
+.wordmark {
+  font-family: var(--font-plex-condensed), var(--font-condensed);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.wordmark .qualifier {
+  color: var(--color-annotation-on-paper);
+}
+.highlight {
+  background: var(--color-yellow);
+  padding: 0 3px;
+  border-radius: 1px;
+}
+.prose-list {
+  padding-left: 1.2em;
+  margin: 0;
+  max-width: 68ch;
+}
+.prose-list li + li {
+  margin-top: 8px;
+}
+.stack > * + * {
+  margin-top: 16px;
+}
+.stack-3 > * + * {
+  margin-top: 24px;
+}
+.stack-4 > * + * {
+  margin-top: 32px;
+}
+
+/* Grid: 12 columns, 1280 max, 24px gutters. */
+.container {
+  max-width: 1344px;
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+.grid12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 24px;
+  align-items: start;
+}
+.reading {
+  grid-column: 2 / span 7;
+  min-width: 0;
+}
+.wide {
+  grid-column: 2 / span 11;
+  min-width: 0;
+}
+/* Full bleed across the grid, for a data table that needs every column. */
+.full {
+  grid-column: 1 / span 12;
+  min-width: 0;
+}
+.rail {
+  grid-column: 10 / span 3;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+}
+.rail p + p,
+.rail p + ul,
+.rail ul + p {
+  margin-top: 16px;
+}
+.section {
+  border-top: 1px solid var(--color-rule);
+}
+.section > .container {
+  padding-top: 40px;
+  padding-bottom: 72px;
+}
+.section-hero > .container {
+  padding-top: 32px;
+}
+.section-tight > .container {
+  padding-bottom: 40px;
+}
+
+@media (max-width: 1023px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .grid12 {
+    display: block;
+  }
+  .full {
+    margin-top: 24px;
+  }
+  .rail {
+    margin-top: 24px;
+  }
+  .section > .container {
+    padding-top: 32px;
+    padding-bottom: 56px;
+  }
+}
+
+/* Controls */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 120ms linear;
+}
+.btn-ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.btn-ink:hover {
+  background: var(--color-ink-hover);
+}
+.label {
+  display: block;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-annotation-on-paper);
+  margin-bottom: 6px;
+}
+.select {
+  display: block;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+.select:disabled {
+  color: var(--color-annotation-on-paper);
+  cursor: not-allowed;
+}
+.select:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 0;
+  border-color: var(--color-ink);
+}
+.text-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.text-button:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Tables. Real tables, hairlines, nothing else. */
+.table-wrap {
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 16px 10px 0;
+  border-bottom: 1px solid var(--color-rule);
+  vertical-align: top;
+}
+.table thead th {
+  font-weight: 500;
+  border-bottom: 1px solid var(--color-ink);
+  vertical-align: bottom;
+}
+.table th:last-child,
+.table td:last-child {
+  padding-right: 0;
+}
+.table td.numeric,
+.table th.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.table td.not-run {
+  color: var(--color-annotation-on-paper);
+}
+
+.table-dense th,
+.table-dense td {
+  padding: 8px 16px 8px 0;
+}
+.table caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+  padding-bottom: 12px;
+}
+
+/* Sortable header: a button inside the th, so keyboard and screen readers get the real control. */
+.sort-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 500;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  text-align: left;
+}
+.numeric .sort-button {
+  justify-content: flex-end;
+  text-align: right;
+}
+.sort-button:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.sort-button:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+.sort-state {
+  font-size: 13px;
+  color: var(--color-annotation-on-paper);
+  font-weight: 400;
+  min-width: 1ch;
+}
+.table th[aria-sort="ascending"] .sort-state,
+.table th[aria-sort="descending"] .sort-state {
+  color: var(--color-ink);
+}
+
+/* Filter bar above a leaderboard. */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 240px));
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+.filter-note {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+  margin-top: 12px;
+}
+
+/* The status banner. A hairline box, no colour fill, no icon. */
+.banner {
+  border: 1px solid var(--color-rule);
+  border-left: 2px solid var(--color-red);
+  border-radius: 2px;
+  padding: 20px 24px;
+  max-width: 68ch;
+}
+.banner h2,
+.banner p.banner-title {
+  font-size: 20px;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.banner p + p,
+.banner p + ul {
+  margin-top: 12px;
+}
+
+/* Definition block. */
+.defs {
+  border-top: 1px solid var(--color-rule);
+}
+.def {
+  border-bottom: 1px solid var(--color-rule);
+  padding: 24px 0;
+}
+.def-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 12px;
+}
+.def dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 152px minmax(0, 1fr);
+  column-gap: 24px;
+  row-gap: 12px;
+  max-width: 900px;
+}
+.def dt {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+}
+.def dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+@media (max-width: 767px) {
+  .def dl {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+  }
+  .def dt {
+    margin-top: 12px;
+  }
+}
+
+/* Code. Monospace is not in the brand type scale, so commands sit in a hairline box
+   at the annotation size and keep the sans face, with tabular figures. */
+.code {
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  background: var(--card-paper);
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  white-space: pre;
+  tab-size: 2;
+}
+.code-heading {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+  margin-bottom: 8px;
+}
+code {
+  font-family: inherit;
+  background: var(--card-paper);
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  padding: 0 4px;
+  font-size: 0.95em;
+}
+.code code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Row lists and cards */
+.row-list > * {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--color-rule);
+}
+.row-list > *:first-child {
+  border-top: 1px solid var(--color-rule);
+}
+.card {
+  display: block;
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  padding: 24px;
+  text-decoration: none;
+  color: var(--color-ink);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  gap: 24px;
+}
+@media (max-width: 379px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Chart. The three marks: yellow fill for what the machine did, a red stroke for what a
+   person did, rule grey hairlines for the frame. No gridlines beyond the baseline. */
+.chart {
+  border: 1px solid var(--color-rule);
+  border-radius: 2px;
+  padding: 24px;
+}
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  text-align: center;
+  padding: 24px;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+  list-style: none;
+  padding: 0;
+}
+.chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.swatch {
+  width: 18px;
+  height: 12px;
+  flex: 0 0 auto;
+  border: 1px solid var(--color-rule);
+}
+.swatch-automated {
+  background: var(--color-yellow);
+}
+.swatch-reviewed {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--color-red);
+  height: 8px;
+}
+
+/* Skip link and screen-reader text */
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 10;
+  padding: 10px 16px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: 2px;
+  font-size: 15px;
+}
+.skip-link:focus {
+  top: 8px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Top bar and footer */
+.topbar {
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-rule);
+}
+.topbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 32px;
+  max-width: 1344px;
+  margin: 0 auto;
+  padding: 12px 32px;
+}
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.nav-links a {
+  text-decoration: none;
+  white-space: nowrap;
+  text-underline-offset: 4px;
+}
+.nav-links a:hover,
+.nav-links a[data-current="true"] {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+.nav-links a[data-current="true"] {
+  text-decoration-thickness: 2px;
+}
+@media (max-width: 1023px) {
+  .topbar-inner {
+    padding: 12px 20px;
+  }
+}
+
+.footer {
+  border-top: 1px solid var(--color-rule);
+  background: var(--color-paper);
+}
+.footer > .container {
+  padding-top: 40px;
+  padding-bottom: 32px;
+}
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.footer-col {
+  padding: 0 24px;
+  border-left: 1px solid var(--color-rule);
+}
+.footer-col:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.footer-col:last-child {
+  padding-right: 0;
+}
+.footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-rule);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-annotation-on-paper);
+}
+@media (max-width: 1023px) {
+  .footer-columns {
+    grid-template-columns: 1fr;
+  }
+  .footer-col {
+    padding: 20px 0;
+    border-left: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+  .footer-col:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+/* Long-form rendering of a source document (the charter). */
+.doc {
+  font-size: 17px;
+  line-height: 1.55;
+}
+.doc p,
+.doc li {
+  max-width: 68ch;
+}
+.doc > * + *,
+.doc section > * + * {
+  margin-top: 16px;
+}
+.doc section + section {
+  margin-top: 0;
+}
+.doc section:first-of-type > h2 {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+.doc h2 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-rule);
+}
+.doc h3 {
+  font-size: 22px;
+  line-height: 1.2;
+  margin-top: 32px;
+}
+.doc h4 {
+  font-size: 18px;
+  line-height: 1.25;
+  margin-top: 24px;
+}
+.doc .table-wrap {
+  margin-top: 20px;
+}
+.doc blockquote {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--color-red);
+}
+.doc blockquote > * + * {
+  margin-top: 12px;
+}
+.toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
