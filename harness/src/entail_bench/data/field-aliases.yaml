@@ -1,0 +1,129 @@
+# Field-name aliases — shared normalisation
+#
+# Charter section 5.3: normalisation is one shared function applied identically
+# to every system's output, and it is published with the harness. This file is
+# part of that function. It is applied to a large language model's answer and to
+# a document service's answer in exactly the same way, so no system gets a
+# mapping another does not.
+#
+# The rule: a returned key that is not a schema field is looked up here, and if
+# the alias resolves to a schema field the document does not already carry a
+# value for, the value moves to that field. Matching is case-insensitive and
+# ignores spaces, hyphens and underscores. An alias that resolves to a field the
+# system already returned is left alone and counted as an out-of-schema return.
+#
+# Version 1.0.0. Adding an alias can move a figure, so it is a major harness
+# version under charter section 7.1.
+
+version: "1.0.0"
+
+aliases:
+  # Invoice identity
+  invoiceid: invoice_number
+  invoiceno: invoice_number
+  invoicenumber: invoice_number
+  billnumber: invoice_number
+  documentnumber: invoice_number
+  invoicedate: invoice_date
+  billdate: invoice_date
+  issuedate: invoice_date
+  duedate: due_date
+  paymentduedate: due_date
+  servicedate: supply_date
+  deliverydate: supply_date
+
+  # Parties
+  vendorname: supplier_name
+  suppliername: supplier_name
+  sellername: seller_name
+  remittancename: supplier_name
+  vendoraddress: supplier_address
+  supplieraddress: supplier_address
+  customername: buyer_name
+  billtoname: bill_to_name
+  customeraddress: buyer_address
+  billtoaddress: bill_to_address
+  shiptoaddress: ship_to_address
+  shippingaddress: ship_to_address
+
+  # Money
+  invoicetotal: invoice_total
+  totalamount: invoice_total
+  amountdue: invoice_total
+  grandtotal: invoice_total
+  totalamountdue: total_amount_due
+  subtotal: subtotal
+  nettotal: net_total
+  netamount: net_total
+  grosstotal: gross_total
+  totaltax: total_tax
+  taxamount: tax_amount
+  taxtotal: total_tax
+  vatamount: vat_amount
+  vatrate: vat_rate
+  salestax: sales_tax_amount
+  salestaxamount: sales_tax_amount
+  taxablevalue: taxable_value
+  freightcharge: freight
+  shippingcharge: shipping
+  roundoff: round_off
+  amountinwords: amount_in_words
+
+  # Tax identity
+  vendortaxid: vendor_tax_id
+  taxid: vendor_tax_id
+  vatnumber: supplier_vat_number
+  suppliervatnumber: supplier_vat_number
+  customervatnumber: customer_vat_number
+  gstin: supplier_gstin
+  suppliergstin: supplier_gstin
+  buyergstin: buyer_gstin
+  pan: supplier_pan
+  ein: vendor_ein
+  tin: seller_tin
+
+  # Banking
+  ibannumber: iban
+  bicswift: bic
+  swiftcode: bic
+  bankaccountnumber: bank_account_number
+  routingnumber: ach_routing_number
+  ifsccode: bank_ifsc
+  ifsc: bank_ifsc
+
+  # Lines
+  items: line_items
+  lineitems: line_items
+  lines: line_items
+  itemlines: line_items
+  estimatelines: estimate_lines
+  itemdescription: description
+  productcode: hsn_sac
+  unitprice: unit_price
+  rate: unit_price
+  qty: quantity
+  unitofmeasure: uom
+  unit: uom
+  lineamount: amount
+  linetotal: amount
+
+  # Purchase order
+  purchaseorder: po_number
+  ponumber: po_number
+  podate: po_date
+  requiredby: required_by
+  costcentre: cost_centre
+  costcenter: cost_centre
+
+  # Claim and identity documents
+  claimnumber: claim_number
+  policynumber: policy_number
+  insuredname: insured_name
+  dateofbirth: holder_dob
+  dob: holder_dob
+  passportnumber: passport_number
+  documentnumber_mrz: passport_number
+  gender: holder_gender
+  sex: holder_gender
+  fullname: holder_name
+  address: holder_address

@@ -1,0 +1,141 @@
+# Model registry
+#
+# One row per system that can be scored. `entail-bench list-models` prints this
+# with each row's live availability.
+#
+# `model_id` is the identifier sent to the provider. It is deliberately left
+# empty for the hosted models: the model version in scope is a decision a person
+# makes before a run (charter section 10.3), and inventing one here would put a
+# version string into a report that nobody chose. Set it in your config:
+#
+#   models:
+#     - name: openai
+#       model_id: <the model identifier you are scoring>
+#
+# or on the command line with --model-id.
+#
+# No key is stored here, or anywhere else in this package. Each row names the
+# environment variable its adapter reads.
+
+version: "1.0.0"
+
+models:
+  - name: openai
+    adapter: openai
+    provider: OpenAI
+    kind: model
+    env_vars: [OPENAI_API_KEY]
+    price_key: openai
+    note: "Chat completions with image parts."
+
+  - name: anthropic
+    adapter: anthropic
+    provider: Anthropic
+    kind: model
+    env_vars: [ANTHROPIC_API_KEY]
+    price_key: anthropic
+    note: "Messages with base64 image blocks."
+
+  - name: google
+    adapter: google
+    provider: Google
+    kind: model
+    env_vars: [GOOGLE_API_KEY]
+    price_key: google
+    note: "Generative language generateContent with inline_data parts."
+
+  - name: mistral
+    adapter: mistral
+    provider: Mistral
+    kind: model
+    env_vars: [MISTRAL_API_KEY]
+    price_key: mistral
+    note: "OpenAI-compatible chat completions."
+
+  - name: local-vllm
+    adapter: local-openai
+    provider: self-hosted
+    kind: model
+    env_vars: [LOCAL_OPENAI_BASE_URL]
+    optional_env_vars: [LOCAL_OPENAI_API_KEY]
+    price_key: self_hosted_compute
+    options:
+      json_mode: false
+    note: >-
+      Any OpenAI-compatible server. For vLLM point LOCAL_OPENAI_BASE_URL at
+      http://host:8000/v1.
+
+  - name: local-ollama
+    adapter: local-openai
+    provider: self-hosted
+    kind: model
+    env_vars: [LOCAL_OPENAI_BASE_URL]
+    optional_env_vars: [LOCAL_OPENAI_API_KEY]
+    price_key: self_hosted_compute
+    options:
+      json_mode: false
+    note: >-
+      Ollama exposes the same interface. Point LOCAL_OPENAI_BASE_URL at
+      http://host:11434/v1.
+
+  - name: aws-textract
+    adapter: aws-textract
+    provider: Amazon Web Services
+    kind: document_service
+    model_id: AnalyzeDocument
+    env_vars: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY]
+    optional_env_vars: [AWS_REGION, AWS_SESSION_TOKEN]
+    price_key: aws_textract
+    note: "AnalyzeDocument with QUERIES, FORMS and TABLES."
+
+  - name: azure-document-intelligence
+    adapter: azure-document-intelligence
+    provider: Microsoft Azure
+    kind: document_service
+    model_id: prebuilt-document
+    env_vars: [AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT, AZURE_DOCUMENT_INTELLIGENCE_KEY]
+    price_key: azure_document_intelligence
+    note: >-
+      Set model_id to the prebuilt or custom model you are scoring, for example
+      prebuilt-invoice.
+
+  - name: google-document-ai
+    adapter: google-document-ai
+    provider: Google Cloud
+    kind: document_service
+    env_vars: [GOOGLE_APPLICATION_CREDENTIALS, GOOGLE_DOCAI_PROCESSOR]
+    optional_env_vars: [GOOGLE_DOCAI_PROJECT, GOOGLE_DOCAI_LOCATION]
+    price_key: google_document_ai
+    note: "The processor is named by GOOGLE_DOCAI_PROCESSOR."
+
+  - name: http-endpoint
+    adapter: http-endpoint
+    provider: generic
+    kind: pipeline
+    env_vars: [ENTAIL_HTTP_ENDPOINT_URL]
+    optional_env_vars: [ENTAIL_HTTP_ENDPOINT_TOKEN]
+    price_key: http_endpoint
+    note: >-
+      Any IDP vendor, and our own pipeline. Same prompt, same pages, same
+      scorer.
+
+  - name: entail-pipeline
+    adapter: http-endpoint
+    provider: Entailment Labs
+    kind: pipeline
+    env_vars: [ENTAIL_HTTP_ENDPOINT_URL]
+    optional_env_vars: [ENTAIL_HTTP_ENDPOINT_TOKEN]
+    price_key: entail_pipeline
+    note: >-
+      Our own pipeline, scored by the same harness from the same commit with the
+      same prompts on the same data, and printed in the same table with no
+      special formatting (charter section 5.6).
+
+  - name: dry-run-fixture
+    adapter: dry-run-fixture
+    provider: none (recorded fixture)
+    kind: fixture
+    env_vars: []
+    note: >-
+      Synthetic. Reached only through --dry-run or by naming it. Its output is
+      stamped synthetic and is refused by the leaderboard builder.
