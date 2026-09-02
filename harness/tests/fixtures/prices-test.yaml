@@ -1,0 +1,63 @@
+# SYNTHETIC price list — for the cost tests only.
+#
+# The numbers below are invented to make the cost arithmetic checkable. They are
+# not a price list, they are not quoted from any provider, and they are never
+# read by a run: the shipped prices.yaml carries no figure at all, and this file
+# lives under tests/fixtures/.
+#
+# Round numbers are used on purpose so that a reader can see at a glance that
+# they were chosen for the arithmetic and not copied from anywhere.
+
+version: "0.0.1-test"
+currency: USD
+price_list_date: "2026-01-01"
+price_list_note: "Synthetic test fixture. Not a price list."
+
+providers:
+  test_tokens:
+    billing: per_million_tokens
+    verified: true
+    input: 1.0
+    output: 10.0
+    reasoning: 20.0
+    source_url: "synthetic test fixture, no source"
+    verified_on: "2026-01-01"
+
+  test_tokens_no_output_rate:
+    billing: per_million_tokens
+    verified: true
+    input: 1.0
+    output: null
+    source_url: "synthetic test fixture, no source"
+    verified_on: "2026-01-01"
+
+  test_pages:
+    billing: per_page
+    verified: true
+    per_page: 0.01
+    source_url: "synthetic test fixture, no source"
+    verified_on: "2026-01-01"
+
+  test_documents:
+    billing: per_document
+    verified: true
+    per_document: 0.25
+    source_url: "synthetic test fixture, no source"
+    verified_on: "2026-01-01"
+
+  test_compute:
+    billing: per_instance_hour
+    verified: true
+    instance_type: "synthetic"
+    hourly_rate: 3.6
+    concurrency: 1
+    source_url: "synthetic test fixture, no source"
+    verified_on: "2026-01-01"
+
+  test_unverified:
+    billing: per_million_tokens
+    verified: false
+    input: null
+    output: null
+    source_url: null
+    verified_on: null
