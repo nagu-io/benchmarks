@@ -1,0 +1,15 @@
+{
+  "_note": "Self-test configuration. It replays a hand-written fixture through the runner and the scorer so that the loop can be exercised with no model interface. A self-test run is written publishable=false and is never a result. See tests/fixtures/README.md.",
+  "price_list_date": "not applicable to a self test",
+  "customer_model": {"provider": "openai_compatible", "base_url": "placeholder",
+                     "model": "placeholder", "api_key_env": "HC_CUSTOMER_KEY"},
+  "judge_model": {"provider": "anthropic_messages", "base_url": "placeholder",
+                  "model": "placeholder", "api_key_env": "HC_JUDGE_KEY"},
+  "agents": {
+    "replay-fixture": {
+      "adapter": "replay",
+      "display_name": "replay of a hand-written fixture, not a system",
+      "fixture": "tests/fixtures/contacts.replay.jsonl"
+    }
+  }
+}

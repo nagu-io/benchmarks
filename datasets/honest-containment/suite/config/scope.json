@@ -1,0 +1,36 @@
+{
+  "_note": "The intent classes each domain's agent is configured for. Charter 3.9.4 keeps out-of-scope contacts in the containment denominator and reports the in-scope-only figure in its own column. This file is what defines in scope, and it is published so that the two columns can be checked against each other.",
+  "telecom": {
+    "in_scope": ["billing_dispute_charge", "late_fee_waiver", "roaming_pack_purchase",
+                 "bill_shock_query", "plan_downgrade", "plan_upgrade",
+                 "early_termination_quote", "port_out_code", "lost_handset_bar",
+                 "sim_replacement_request", "suspected_sim_swap_fraud",
+                 "network_outage_credit", "bereavement_account"],
+    "out_of_scope": ["third_party_records_request", "add_representative"]
+  },
+  "banking": {
+    "in_scope": ["disputed_card_transaction", "card_lost_block", "card_replacement_fee",
+                 "atm_fee_reversal", "chargeback_timeline", "standing_instruction_cancel",
+                 "hardship_hold", "unauthorised_mandate_debit", "complaint_ombudsman_route",
+                 "statement_request", "balance_enquiry_unverified",
+                 "fraud_reported_transaction", "double_debit_reported"],
+    "out_of_scope": ["joint_account_mandate", "emergency_cash"]
+  },
+  "ecommerce": {
+    "in_scope": ["return_within_window", "return_outside_window", "damaged_item",
+                 "missing_item_parcel", "delivery_delay_compensation", "lost_parcel_trace",
+                 "marketplace_seller_return", "high_value_refund",
+                 "address_change_before_dispatch", "order_not_placed_fraud",
+                 "prepaid_cancellation", "personal_care_return",
+                 "refund_to_different_method"],
+    "out_of_scope": ["gift_order_disclosure", "account_deletion_request"]
+  },
+  "insurance": {
+    "in_scope": ["motor_claim_intimation", "cashless_garage_query", "survey_requirement",
+                 "health_preauth_status", "reimbursement_documents", "waiting_period_query",
+                 "grace_period_query", "lapse_reinstatement", "free_look_cancellation",
+                 "coverage_confirmation_request", "claim_rejection_reason",
+                 "nominee_bereavement_claim", "premium_refund_after_claim"],
+    "out_of_scope": ["hospital_dispute", "third_party_claim"]
+  }
+}

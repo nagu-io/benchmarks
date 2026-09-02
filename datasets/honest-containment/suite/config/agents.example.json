@@ -1,0 +1,98 @@
+{
+  "_note": "Run configuration for the Honest Containment suite. Copy to agents.json and fill in every value written placeholder. No key is ever written in this file: each system names the environment variable its key is read from. A value still reading placeholder makes preflight fail, and the results row reads not run with that reason.",
+  "price_list_date": "placeholder - the date the provider price lists were read, charter 5.5",
+  "model_versions_in_scope": "placeholder - the model version strings a person decided to score",
+  "spend_cap_note": "placeholder - a spend cap must be set with each provider before a run",
+  "customer_model": {
+    "provider": "openai_compatible",
+    "base_url": "placeholder - the provider API base, ending in /v1",
+    "model": "placeholder - model version string",
+    "api_key_env": "HC_CUSTOMER_KEY",
+    "temperature": 0.7,
+    "max_output_tokens": 300
+  },
+  "judge_model": {
+    "provider": "anthropic_messages",
+    "base_url": "placeholder - the provider API base",
+    "model": "placeholder - model version string, must differ from every model under test",
+    "api_key_env": "HC_JUDGE_KEY",
+    "temperature": 0.0,
+    "max_output_tokens": 1200
+  },
+  "agents": {
+    "voice-platform-a": {
+      "adapter": "voice_platform",
+      "display_name": "developer voice platform A",
+      "base_url": "placeholder - the platform API base, from its current documentation",
+      "api_key_env": "HC_VOICE_A_KEY",
+      "docs_date": "placeholder - the date of the API documentation used",
+      "sends_audio": true,
+      "receives_interface_addendum": false,
+      "timeout_s": 60,
+      "paths": {
+        "create_session": {"method": "POST", "path": "placeholder", "body": {}},
+        "send_turn": {"method": "POST", "path": "placeholder", "body": {}},
+        "end_session": {"method": "POST", "path": "placeholder", "body": {}}
+      },
+      "response_paths": {
+        "reply_text": "placeholder",
+        "first_token_ms": "placeholder",
+        "transfer": "placeholder",
+        "transfer_destination": "placeholder",
+        "transfer_fields": "placeholder",
+        "disposition": "placeholder",
+        "agent_version": "placeholder"
+      }
+    },
+    "voice-platform-b": {
+      "adapter": "voice_platform",
+      "display_name": "developer voice platform B",
+      "base_url": "placeholder - the platform API base, from its current documentation",
+      "api_key_env": "HC_VOICE_B_KEY",
+      "docs_date": "placeholder - the date of the API documentation used",
+      "sends_audio": true,
+      "receives_interface_addendum": false,
+      "timeout_s": 60,
+      "paths": {
+        "create_session": {"method": "POST", "path": "placeholder", "body": {}},
+        "send_turn": {"method": "POST", "path": "placeholder", "body": {}},
+        "end_session": {"method": "POST", "path": "placeholder", "body": {}}
+      },
+      "response_paths": {
+        "reply_text": "placeholder",
+        "first_token_ms": "placeholder",
+        "transfer": "placeholder",
+        "transfer_destination": "placeholder",
+        "transfer_fields": "placeholder",
+        "disposition": "placeholder",
+        "agent_version": "placeholder"
+      }
+    },
+    "general-llm": {
+      "adapter": "general_llm",
+      "display_name": "general model with the reference agent prompt",
+      "receives_interface_addendum": true,
+      "model": {
+        "provider": "openai_compatible",
+        "base_url": "placeholder - the provider API base, ending in /v1",
+        "model": "placeholder - model version string",
+        "api_key_env": "HC_GENERAL_LLM_KEY",
+        "temperature": 0.0,
+        "max_output_tokens": 900
+      }
+    },
+    "entailment-agent": {
+      "adapter": "entailment_agent",
+      "display_name": "our agent",
+      "receives_interface_addendum": true,
+      "model": {
+        "provider": "openai_compatible",
+        "base_url": "placeholder - the provider API base, ending in /v1",
+        "model": "placeholder - model version string",
+        "api_key_env": "HC_ENTAILMENT_KEY",
+        "temperature": 0.0,
+        "max_output_tokens": 900
+      }
+    }
+  }
+}
