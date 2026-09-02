@@ -1,0 +1,69 @@
+{
+  "status": "succeeded",
+  "analyzeResult": {
+    "apiVersion": "synthetic",
+    "modelId": "prebuilt-invoice",
+    "content": "synthetic page text",
+    "pages": [
+      {
+        "pageNumber": 1
+      }
+    ],
+    "documents": [
+      {
+        "docType": "invoice",
+        "fields": {
+          "InvoiceId": {
+            "type": "string",
+            "valueString": "TST/26-27/0001",
+            "confidence": 0.955
+          },
+          "InvoiceDate": {
+            "type": "date",
+            "valueDate": "2026-01-15",
+            "confidence": 0.91
+          },
+          "InvoiceTotal": {
+            "type": "currency",
+            "valueCurrency": {
+              "amount": 1250.0,
+              "currencyCode": "INR"
+            },
+            "confidence": 0.9
+          },
+          "VendorName": {
+            "type": "string",
+            "valueString": "Tinnara Fabrication LLP",
+            "confidence": 0.87
+          },
+          "Items": {
+            "type": "array",
+            "confidence": 0.8,
+            "valueArray": [
+              {
+                "type": "object",
+                "valueObject": {
+                  "Description": {
+                    "type": "string",
+                    "valueString": "Widget, synthetic"
+                  },
+                  "Quantity": {
+                    "type": "number",
+                    "valueNumber": 10
+                  },
+                  "Amount": {
+                    "type": "currency",
+                    "valueCurrency": {
+                      "amount": 1000.0,
+                      "currencyCode": "INR"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
