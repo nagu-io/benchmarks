@@ -1,0 +1,176 @@
+# Field classes and match rules — Messy Scan
+#
+# Published with the harness so that a reader can check which rule scored which
+# field. Charter section 3.3.2 fixes the rules; this file fixes the mapping from
+# a dataset schema type and field name to one of those rules.
+#
+# Version 1.0.0. A change here can move a figure, so it is a major harness
+# version under charter section 7.1.
+
+version: "1.0.0"
+
+# Rule per class. `group` decides where the figure is reported:
+#   exact_normalised  counts towards field-level accuracy (charter 3.3)
+#   free_text         reported separately, with its tolerance rule printed
+classes:
+  identifier:
+    rule: exact
+    group: exact_normalised
+    note: "Identifiers. Exact after Unicode NFKC and outer whitespace strip."
+  code:
+    rule: exact
+    group: exact_normalised
+    note: "Codes and reference numbers. Exact after NFKC and outer whitespace strip."
+  date:
+    rule: date
+    group: exact_normalised
+    note: "Compared as ISO 8601 calendar dates."
+  amount:
+    rule: amount
+    group: exact_normalised
+    note: "Compared as a numeric value plus a currency code."
+  rate:
+    rule: numeric
+    group: exact_normalised
+    note: "Compared as a numeric value. A trailing percent sign is dropped."
+  number:
+    rule: numeric
+    group: exact_normalised
+  boolean:
+    rule: boolean
+    group: exact_normalised
+  enum:
+    rule: enum
+    group: exact_normalised
+    note: "Case and whitespace normalised."
+  name:
+    rule: name
+    group: exact_normalised
+    note: "Case, punctuation, diacritics, honorifics and multiple spaces normalised."
+  free_text:
+    rule: free_text
+    group: free_text
+    note: >-
+      Scored under the stated tolerance rule and reported separately from the
+      exact and normalised classes, per charter section 3.3.2.
+
+# Schema type -> class, before the field-name overrides below.
+type_to_class:
+  identifier: identifier
+  date: date
+  money: amount
+  rate: rate
+  number: number
+  bool: boolean
+  enum: enum
+  string: free_text
+
+# Field-name patterns that split the one loose schema type, `string`, into
+# codes, names and free text. First match wins, in order. A field the dataset
+# types as identifier, date, money, rate, number, bool or enum takes that class
+# whatever it is called, so these patterns never override a stated type.
+name_overrides:
+  - pattern: '^(currency)$'
+    class: code
+  - pattern: '_(number|code|no)$'
+    class: code
+  - pattern: '^(si_number|po_number|po_reference|permit_number|enrolment_number|vendor_code|cost_centre|mrz_line1|mrz_line2|vehicle_registration|card_expiry|hsn_sac|sl|uom|bic|incoterm|supplier_state_code|customer_country|passport_country|supplier_country)$'
+    class: code
+  - pattern: '_(name|holder)$'
+    class: name
+  - pattern: '^(card_holder|father_or_guardian|treating_doctor|approver_name|approver_title|buyer_org|insured_name|holder_name|surveyor_name)$'
+    class: name
+  - pattern: '^(description)$'
+    class: free_text
+
+# Line items are structured. Cells are scored individually; each cell takes the
+# class its own name and type give it.
+line_items:
+  # Cells present in the ground truth that are NOT scored, with the reason.
+  # Every excluded instance is counted and reported (charter 3.1.2).
+  excluded_cells:
+    amount_minor: "internal minor-unit encoding, not printed on the page"
+    unit_price_minor: "internal minor-unit encoding, not printed on the page"
+    quantity_thousandths: "internal thousandths encoding, not printed on the page"
+  # `hsn_sac` is printed only where the renderer draws that column. Scoring it
+  # elsewhere would mark every system wrong for a value the page does not carry.
+  conditional_cells:
+    hsn_sac:
+      scored_for_subtypes:
+        - invoice_in_gst
+        - invoice_us
+        - po_in
+        - po_us
+        - po_eu
+        - po_ph
+      reason: >-
+        The HSN/SAC, SKU or Material column is drawn only for these subtypes.
+        EU VAT invoices, Philippine sales invoices and claim estimates do not
+        print it.
+
+# Cross-field validation rules. A returned record that breaks one of these
+# enters the review queue under VALFAIL, exactly as a production validation
+# rule would. A rule whose inputs are absent or unparseable is recorded as not
+# applicable for that document; it never counts as a pass or a failure.
+validation_rules:
+  - id: required_fields_present
+    description: >-
+      Every field in the published schema is present as a key in the returned
+      object. A null value is present; an omitted key is not. Switch this off
+      with validation.required_fields: none in the config, and the report states
+      which setting was in force.
+  - id: line_sum_equals_base
+    description: "The sum of line amounts equals the stated taxable or net base."
+    line_field_any: [line_items, estimate_lines]
+    base_field_any: [taxable_value, net_total, subtotal, vatable_sales, assessed_total]
+    tolerance_minor_units: 1
+  - id: total_equals_components
+    description: "The stated total equals its stated components, per subtype."
+    tolerance_minor_units: 1
+  - id: date_order
+    description: "A later date is not earlier than the date it follows."
+
+# The component arithmetic each subtype prints on the page. Used by
+# total_equals_components. A rule whose inputs are absent or unparseable is
+# recorded as not applicable for that document; it never counts as a pass or a
+# failure.
+total_formulas:
+  invoice_in_gst:
+    target: invoice_total
+    plus: [taxable_value, cgst_amount, sgst_amount, igst_amount, round_off]
+  invoice_us:
+    target: invoice_total
+    plus: [subtotal, shipping, sales_tax_amount]
+    minus: [discount]
+  invoice_eu_vat:
+    target: gross_total
+    plus: [net_total, vat_amount]
+  invoice_ph_bir:
+    target: total_amount_due
+    plus: [vatable_sales, vat_exempt_sales, zero_rated_sales, vat_amount]
+  po_in: &po_total
+    target: po_total
+    plus: [subtotal, tax_amount, freight]
+  po_us: *po_total
+  po_eu: *po_total
+  po_ph: *po_total
+  claim_motor:
+    target: net_payable
+    plus: [assessed_total]
+    minus: [salvage_value, policy_excess]
+  claim_property:
+    target: net_payable
+    plus: [assessed_total]
+    minus: [salvage_value, policy_excess]
+  claim_health:
+    target: net_payable
+    plus: [assessed_total]
+    minus: [co_pay_amount, policy_excess]
+
+# Pairs checked by date_order: the first date must not fall before the second.
+date_order_pairs:
+  - [due_date, invoice_date]
+  - [required_by, po_date]
+  - [discharge_date, admission_date]
+  - [passport_expiry_date, passport_issue_date]
+  - [claim_date, incident_date]
