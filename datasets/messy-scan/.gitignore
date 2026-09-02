@@ -1,0 +1,15 @@
+# Generated artefacts. Everything here is rebuilt from the seed with the four commands
+# in README.md, so the repository holds no binaries and no multi-megabyte data files.
+#
+# `ground-truth.jsonl` is 4,999,001 bytes and `sample/ground-truth.jsonl` is 244,734.
+# Both are rebuilt by `python3 generate.py --seed 20260902`; their SHA-256s are in the
+# repository's `REGENERATED.md` and in `sample/README.md`, so a rebuild is checked
+# rather than trusted. A two-document `sample/preview.jsonl` is committed instead, so
+# the shape of an item can be read here without running anything.
+build/
+documents/
+sample/documents/
+ground-truth.jsonl
+sample/ground-truth.jsonl
+__pycache__/
+*.pyc
