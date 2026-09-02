@@ -34,9 +34,8 @@ export default function Page() {
         </Reading>
         <Rail label={`Charter ${charter.version}, written ${charter.written}`}>
           <p>
-            Every figure on this site is read at build time from the files in{" "}
-            <code>10-benchmarks/results/</code>. Nothing on any page is typed by hand. On {generatedAt} the build read{" "}
-            {sources.length} source files.
+            Every figure on this site is read at build time from the files in this repository. Nothing on any page is
+            typed by hand. On {generatedAt} the build read {sources.length} source files.
           </p>
           <p>
             Harness <code>entail-bench</code> {harness.version ?? "not set"}. Data CC BY 4.0, code MIT, in{" "}
