@@ -1,0 +1,12 @@
+# Rendered audio. About 79 MB, rebuilt from the seed with `python3 tts.py`, so the
+# repository holds no binaries. The per-file hashes and measured signal-to-noise ratios
+# stay in audio-manifest.jsonl, which is committed.
+audio/
+__pycache__/
+*.pyc
+# Working files a labeller produces. Labels are committed deliberately, not by accident.
+labelling/packets/
+labelling/labels-*.csv
+labelling/judge-agreement.json
+suite/config/agents.json
+.pytest_cache/

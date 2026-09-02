@@ -1,0 +1,117 @@
+{
+  "dataset_version": "1.0.0",
+  "contacts": 300,
+  "assumption": "an agent that follows every policy in the pack, escalates exactly when the ground truth requires it, and asserts nothing the pack does not support",
+  "not_a_result": "No system has been run. These are properties of the dataset, computed from the ground truth.",
+  "ceilings": {
+    "A_no_transfer": {
+      "contained": 128,
+      "of": 300,
+      "share": 0.4267
+    },
+    "B_no_human_handled": {
+      "contained": 128,
+      "of": 300,
+      "share": 0.4267
+    },
+    "C_self_service_completion": {
+      "contained": 128,
+      "of": 300,
+      "share": 0.4267
+    },
+    "D_no_repeat_24h": {
+      "contained": 288,
+      "of": 300,
+      "share": 0.96
+    },
+    "D_no_repeat_72h": {
+      "contained": 258,
+      "of": 300,
+      "share": 0.86
+    },
+    "A_and_D_no_repeat_72h": {
+      "contained": 122,
+      "of": 300,
+      "share": 0.4067
+    },
+    "ours_3_9_1": {
+      "contained": 116,
+      "of": 300,
+      "share": 0.3867
+    }
+  },
+  "false_containment_at_the_ceiling": {
+    "A_no_transfer": {
+      "reference": "A_no_transfer",
+      "numerator": 12,
+      "denominator": 128,
+      "rate": 0.09375,
+      "breakdown": {
+        "not_resolved": 0,
+        "person_requested_not_provided": 0,
+        "repeat_within_seven_days": 12
+      },
+      "ambiguous_excluded": 6
+    },
+    "B_no_human_handled": {
+      "reference": "B_no_human_handled",
+      "numerator": 12,
+      "denominator": 128,
+      "rate": 0.09375,
+      "breakdown": {
+        "not_resolved": 0,
+        "person_requested_not_provided": 0,
+        "repeat_within_seven_days": 12
+      },
+      "ambiguous_excluded": 6
+    },
+    "C_self_service_completion": {
+      "reference": "C_self_service_completion",
+      "numerator": 12,
+      "denominator": 128,
+      "rate": 0.09375,
+      "breakdown": {
+        "not_resolved": 0,
+        "person_requested_not_provided": 0,
+        "repeat_within_seven_days": 12
+      },
+      "ambiguous_excluded": 6
+    },
+    "D_no_repeat_24h": {
+      "reference": "D_no_repeat_24h",
+      "numerator": 172,
+      "denominator": 288,
+      "rate": 0.5972222222222222,
+      "breakdown": {
+        "not_resolved": 0,
+        "person_requested_not_provided": 0,
+        "repeat_within_seven_days": 49
+      },
+      "ambiguous_excluded": 6
+    },
+    "D_no_repeat_72h": {
+      "reference": "D_no_repeat_72h",
+      "numerator": 142,
+      "denominator": 258,
+      "rate": 0.5503875968992248,
+      "breakdown": {
+        "not_resolved": 0,
+        "person_requested_not_provided": 0,
+        "repeat_within_seven_days": 19
+      },
+      "ambiguous_excluded": 6
+    },
+    "A_and_D_no_repeat_72h": {
+      "reference": "A_and_D_no_repeat_72h",
+      "numerator": 6,
+      "denominator": 122,
+      "rate": 0.04918032786885246,
+      "breakdown": {
+        "not_resolved": 0,
+        "person_requested_not_provided": 0,
+        "repeat_within_seven_days": 6
+      },
+      "ambiguous_excluded": 6
+    }
+  }
+}
