@@ -199,7 +199,11 @@ export function SuitePage({ slug }: { slug: string }) {
               </p>
               <TableWrap label={`${s.name} dataset composition`}>
                 <table className="table table-dense">
-                  <caption>Composition, read from the dataset&apos;s own ground truth and manifest.</caption>
+                  <caption>
+                    Composition, read at build time from <code>{s.dataset.countedFrom ?? "the dataset"}</code>. The
+                    ground truth is rebuilt from the seed rather than committed, so a build from a clone of this
+                    repository reads the committed manifest instead; the two carry the same counts.
+                  </caption>
                   <thead>
                     <tr>
                       <th scope="col">Line</th>
