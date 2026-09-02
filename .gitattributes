@@ -1,0 +1,8 @@
+# The scoresheet is RFC 4180 CSV with CRLF line endings, because that is what a
+# spreadsheet expects and what the assessors will open it in. Git must not
+# normalise them on checkout.
+*.csv text eol=crlf
+
+# Everything else is LF, on every platform.
+* text=auto eol=lf
+*.png binary
