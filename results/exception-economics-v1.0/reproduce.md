@@ -83,3 +83,4 @@ Charter 3.1.4 requires three runs per system per suite. That rule applies to a r
 | A partner's fully loaded reviewer cost, in INR or USD or both | every money figure in this report is a placeholder until then |
 | A partner's own measured reviewer minutes, if any exist | every minute in the labour model is a modelling assumption |
 | A measured cost per item from a run | machine cost is zero here, so net cost is labour only |
+

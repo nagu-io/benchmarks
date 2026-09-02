@@ -75,3 +75,4 @@ At threshold 0.80 the simulation leaves 3 such items in the baseline sample and 
 3. What were the automation rate and the net cost per item at acceptance, and what were the same two figures ninety days later, with both endpoints and both sample sizes.
 
 The contract language for all three is in `10-benchmarks/charter/contract-clauses.md`, clauses 13 to 16.
+
