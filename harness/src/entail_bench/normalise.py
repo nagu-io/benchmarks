@@ -39,6 +39,8 @@ _HONORIFICS = (
     "maj", "rev", "hon", "sir", "madam", "mdm",
 )
 
+# Every non-ASCII character in this file is written as a \u escape, so the
+# source is pure ASCII and survives any transport that is not byte-exact.
 _CURRENCY_SYMBOLS = {
     "₹": "INR", "rs": "INR", "rs.": "INR", "inr": "INR", "र": "INR",
     "$": "USD", "us$": "USD", "usd": "USD",
@@ -269,7 +271,6 @@ class Amount:
     currency_stated: bool
 
 
-# Currency symbols are written as escapes so this source file stays ASCII.
 _CURRENCY_TOKEN_RE = re.compile(
     "[a-z$\\u20ac\\u00a3\\u20b9\\u20b1\\u00a5]+\\.?", re.IGNORECASE
 )
