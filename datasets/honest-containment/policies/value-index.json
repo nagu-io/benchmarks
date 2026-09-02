@@ -1,0 +1,543 @@
+{
+  "dataset_version": "1.0.0",
+  "synthetic": true,
+  "note": "Every quotable value in the policy corpus. The scorer's deterministic hallucinated-policy check reads this file.",
+  "values": [
+    {
+      "domain": "telecom",
+      "document": "OB-POL-001",
+      "document_status": "current",
+      "key": "verify_factors_account_change",
+      "value": 2,
+      "fragment": "2 of 3 factors before any account change, credit or billing disclosure"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-001",
+      "document_status": "current",
+      "key": "payment_match_tolerance_inr",
+      "value": 10,
+      "fragment": "last payment accepted within 10 rupees of the recorded amount"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-002",
+      "document_status": "current",
+      "key": "agent_credit_ceiling_inr",
+      "value": 500,
+      "fragment": "credit of up to 500 rupees per account in any 90 days without approval"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-002",
+      "document_status": "current",
+      "key": "late_fee_inr",
+      "value": 150,
+      "fragment": "late fee of 150 rupees after 7 days past the due date"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-002",
+      "document_status": "current",
+      "key": "late_fee_waiver_per_months",
+      "value": 12,
+      "fragment": "waived once in any 12 months"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-002",
+      "document_status": "current",
+      "key": "network_fault_credit_per_day_inr",
+      "value": 25,
+      "fragment": "25 rupees per full day of confirmed outage"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-002",
+      "document_status": "current",
+      "key": "refund_business_days_high",
+      "value": 10,
+      "fragment": "refund to the original payment method within 7 to 10 business days"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-004",
+      "document_status": "current",
+      "key": "etc_admin_fee_inr",
+      "value": 1200,
+      "fragment": "administration fee of 1,200 rupees on early termination"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-004",
+      "document_status": "current",
+      "key": "port_out_code_validity_days",
+      "value": 15,
+      "fragment": "porting code valid for 15 days"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-005",
+      "document_status": "current",
+      "key": "roaming_pack_inr",
+      "value": 2999,
+      "fragment": "roaming pack at 2,999 rupees"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-005",
+      "document_status": "current",
+      "key": "roaming_pack_days",
+      "value": 10,
+      "fragment": "roaming pack runs for 10 days"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-005",
+      "document_status": "current",
+      "key": "roaming_pack_gb",
+      "value": 5,
+      "fragment": "roaming pack includes 5 GB"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-005",
+      "document_status": "current",
+      "key": "roaming_activation_minutes",
+      "value": 30,
+      "fragment": "activates within 30 minutes of purchase"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-005",
+      "document_status": "current",
+      "key": "bill_shock_cap_inr",
+      "value": 5000,
+      "fragment": "automatic suspension of out-of-bundle roaming charges at 5,000 rupees"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-006",
+      "document_status": "current",
+      "key": "supervisor_callback_hours",
+      "value": 4,
+      "fragment": "supervisor callback within 4 business hours"
+    },
+    {
+      "domain": "telecom",
+      "document": "OB-POL-007",
+      "document_status": "current",
+      "key": "sim_swap_sms_block_hours",
+      "value": 24,
+      "fragment": "outgoing messages blocked for 24 hours after a SIM replacement"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-001",
+      "document_status": "current",
+      "key": "verify_factors_financial",
+      "value": 3,
+      "fragment": "3 factors before money moves"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-001",
+      "document_status": "current",
+      "key": "verify_factors_information",
+      "value": 2,
+      "fragment": "2 factors to discuss an account"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-001",
+      "document_status": "current",
+      "key": "card_block_minutes",
+      "value": 5,
+      "fragment": "card blocked within 5 minutes on a report of loss"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-002",
+      "document_status": "current",
+      "key": "dispute_window_days",
+      "value": 60,
+      "fragment": "disputed within 60 calendar days of the statement date"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-002",
+      "document_status": "current",
+      "key": "provisional_credit_business_days",
+      "value": 10,
+      "fragment": "provisional credit within 10 business days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-002",
+      "document_status": "current",
+      "key": "chargeback_days_domestic",
+      "value": 45,
+      "fragment": "domestic chargeback up to 45 calendar days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-002",
+      "document_status": "current",
+      "key": "chargeback_days_cross_border",
+      "value": 90,
+      "fragment": "cross-border chargeback up to 90 calendar days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-003",
+      "document_status": "current",
+      "key": "card_replacement_fee_inr",
+      "value": 250,
+      "fragment": "replacement card costs 250 rupees"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-003",
+      "document_status": "current",
+      "key": "card_replacement_free_per_months",
+      "value": 12,
+      "fragment": "first replacement in any 12 months is free"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-003",
+      "document_status": "current",
+      "key": "atm_fee_reversal_ceiling_inr",
+      "value": 1000,
+      "fragment": "agent may reverse fees of up to 1,000 rupees"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-003",
+      "document_status": "current",
+      "key": "atm_fee_reversal_window_days",
+      "value": 90,
+      "fragment": "per account in any 90 days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-004",
+      "document_status": "current",
+      "key": "emergency_cash_ceiling_inr",
+      "value": 25000,
+      "fragment": "emergency cash of up to 25,000 rupees"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-004",
+      "document_status": "current",
+      "key": "emergency_cash_per_months",
+      "value": 12,
+      "fragment": "once in any 12 months"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-005",
+      "document_status": "current",
+      "key": "standing_instruction_notice_business_days",
+      "value": 3,
+      "fragment": "at least 3 business days before the next debit date"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-006",
+      "document_status": "current",
+      "key": "hardship_hold_days",
+      "value": 90,
+      "fragment": "collections hold of up to 90 days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-007",
+      "document_status": "current",
+      "key": "complaint_ack_business_days",
+      "value": 5,
+      "fragment": "complaint acknowledged within 5 business days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-007",
+      "document_status": "current",
+      "key": "complaint_resolution_days",
+      "value": 30,
+      "fragment": "resolved within 30 calendar days"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-007",
+      "document_status": "current",
+      "key": "ombudsman_after_days",
+      "value": 30,
+      "fragment": "ombudsman after 30 days or a final response"
+    },
+    {
+      "domain": "banking",
+      "document": "VB-POL-009",
+      "document_status": "current",
+      "key": "statement_history_years",
+      "value": 7,
+      "fragment": "statement history retained for 7 years"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-001",
+      "document_status": "current",
+      "key": "return_window_days",
+      "value": 10,
+      "fragment": "return accepted within 10 days of delivery"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-001",
+      "document_status": "current",
+      "key": "return_window_perishable_days",
+      "value": 2,
+      "fragment": "perishable goods within 2 days"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-001",
+      "document_status": "current",
+      "key": "refund_original_method_business_days_high",
+      "value": 7,
+      "fragment": "refund to the original payment method within 5 to 7 business days"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-001",
+      "document_status": "current",
+      "key": "wallet_credit_hours",
+      "value": 24,
+      "fragment": "wallet refund within 24 hours"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-001",
+      "document_status": "current",
+      "key": "prepaid_cancellation_refund_hours",
+      "value": 24,
+      "fragment": "prepaid cancellation refunded within 24 hours"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-001",
+      "document_status": "current",
+      "key": "pickup_attempts",
+      "value": 3,
+      "fragment": "up to 3 pickup attempts"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-002",
+      "document_status": "current",
+      "key": "seller_response_business_days",
+      "value": 2,
+      "fragment": "seller has 2 business days to respond"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-002",
+      "document_status": "current",
+      "key": "high_value_threshold_inr",
+      "value": 20000,
+      "fragment": "orders above 20,000 rupees need supervisor approval"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-003",
+      "document_status": "current",
+      "key": "damage_report_hours",
+      "value": 48,
+      "fragment": "damage reported within 48 hours of delivery"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-003",
+      "document_status": "current",
+      "key": "replacement_dispatch_business_days",
+      "value": 3,
+      "fragment": "replacement dispatched within 3 business days"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-004",
+      "document_status": "current",
+      "key": "delay_compensation_inr",
+      "value": 200,
+      "fragment": "wallet credit of 200 rupees for a delay"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-004",
+      "document_status": "current",
+      "key": "delay_compensation_after_days",
+      "value": 3,
+      "fragment": "more than 3 days past the promised date"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-006",
+      "document_status": "current",
+      "key": "resolution_desk_business_days",
+      "value": 1,
+      "fragment": "resolution desk callback within 1 business day"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-006",
+      "document_status": "current",
+      "key": "goodwill_ceiling_inr",
+      "value": 750,
+      "fragment": "goodwill wallet credit of up to 750 rupees"
+    },
+    {
+      "domain": "ecommerce",
+      "document": "BL-POL-006",
+      "document_status": "current",
+      "key": "goodwill_window_days",
+      "value": 90,
+      "fragment": "per account in any 90 days"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-002",
+      "document_status": "current",
+      "key": "motor_intake_hours",
+      "value": 48,
+      "fragment": "motor claim intimated within 48 hours"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-002",
+      "document_status": "current",
+      "key": "survey_threshold_inr",
+      "value": 50000,
+      "fragment": "surveyor appointed where the estimate exceeds 50,000 rupees"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-002",
+      "document_status": "current",
+      "key": "cashless_network_garages",
+      "value": 4200,
+      "fragment": "4,200 garages in the cashless network"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-002",
+      "document_status": "current",
+      "key": "claim_intimation_reference_hours",
+      "value": 2,
+      "fragment": "claim reference within 2 hours of intimation"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "preauth_decision_hours",
+      "value": 4,
+      "fragment": "pre-authorisation decision within 4 hours of a complete request"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "preauth_emergency_hours",
+      "value": 1,
+      "fragment": "within 1 hour for an emergency admission"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "reimbursement_document_days",
+      "value": 30,
+      "fragment": "documents within 30 days of discharge"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "settlement_days",
+      "value": 30,
+      "fragment": "settled within 30 days of the last document"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "initial_waiting_days",
+      "value": 30,
+      "fragment": "initial waiting period of 30 days"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "named_ailment_waiting_months",
+      "value": 24,
+      "fragment": "named ailments 24 months"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-003",
+      "document_status": "current",
+      "key": "pre_existing_waiting_months",
+      "value": 36,
+      "fragment": "declared pre-existing conditions 36 months"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-004",
+      "document_status": "current",
+      "key": "grace_period_annual_days",
+      "value": 30,
+      "fragment": "grace period of 30 days on an annual premium"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-004",
+      "document_status": "current",
+      "key": "grace_period_monthly_days",
+      "value": 15,
+      "fragment": "15 days on a monthly premium"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-005",
+      "document_status": "current",
+      "key": "free_look_days",
+      "value": 30,
+      "fragment": "free-look period of 30 days from receipt of the policy document"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-005",
+      "document_status": "current",
+      "key": "policy_document_dispatch_days",
+      "value": 7,
+      "fragment": "policy document dispatched within 7 days of issue"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-006",
+      "document_status": "current",
+      "key": "grievance_response_days",
+      "value": 15,
+      "fragment": "grievance answered within 15 calendar days"
+    },
+    {
+      "domain": "insurance",
+      "document": "AG-POL-006",
+      "document_status": "current",
+      "key": "ombudsman_after_days",
+      "value": 30,
+      "fragment": "ombudsman after 30 days or a final letter"
+    }
+  ]
+}
