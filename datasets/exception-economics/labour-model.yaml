@@ -1,0 +1,431 @@
+# Labour model — Exception Economics dataset v1.0.0
+#
+# This file is the labour half of the benchmark. The dataset supplies the items and
+# the ground truth; this file supplies the minutes and the money. Together they let
+# the scorer produce automation rate, wrong-automation rework, reviewer minutes and
+# net cost per item without any model being run, because all four are arithmetic over
+# labelled items and a stated labour model.
+#
+# Read this before quoting anything the scorer produces.
+#
+# 1. Every money figure in this file is a placeholder. It is marked
+#    "placeholder — replace" and it is not a market rate, a survey result, a quote or
+#    a measurement. It exists so that the arithmetic can run at all. Replace it with
+#    the partner's own fully loaded cost before any figure enters a business case.
+#
+# 2. Every minute figure in this file is a modelling assumption. Not one of them was
+#    measured by a time study, ours or anyone's. Each carries a `basis` field that
+#    says so and records the reasoning that set it. A modelled minute is never
+#    presented as a measured one, in this file, in the scorer output or in a report.
+#
+# 3. The INR and USD rates are two independent placeholders. No exchange rate is
+#    applied anywhere in this file or in the scorer, and none should be inferred from
+#    the two numbers sitting beside each other. Each is replaced separately.
+#
+# Charter references are to `10-benchmarks/charter/methodology.md`.
+
+model_version: "1.0.0"
+dataset_version: "1.0.0"
+written: "2026-09-02"
+charter_version: "1.0.0"
+
+status:
+  money: "placeholder — replace"
+  minutes: "modelling assumption — not measured"
+  measured_figures_in_this_file: 0
+
+# ---------------------------------------------------------------------------
+# Reviewer cost
+# ---------------------------------------------------------------------------
+# Fully loaded means the hourly cost of a reviewer to the BPO including salary,
+# statutory contributions, supervision, facilities, tooling licences, attrition and
+# training recovery, and utilisation. A cost per productive hour, not a wage.
+
+reviewer_cost:
+  inr_per_hour:
+    value: 1000.00
+    status: "placeholder — replace"
+    basis: >
+      Placeholder. Chosen as a round number so that no reader mistakes it for a
+      researched rate. Replace with the partner's own fully loaded cost per
+      productive reviewer hour in INR.
+  usd_per_hour:
+    value: 20.00
+    status: "placeholder — replace"
+    basis: >
+      Placeholder, and independent of the INR placeholder above. No exchange rate
+      connects the two and none should be inferred. Replace with the partner's own
+      fully loaded cost per productive reviewer hour in USD.
+  senior_reviewer_multiplier:
+    value: 1.60
+    status: "placeholder — replace"
+    basis: >
+      Placeholder multiplier applied to the reviewer rate for work the model routes
+      to a senior reviewer. Replace with the partner's own senior band cost ratio.
+
+# Machine cost per item, that is the provider and compute charge of processing one
+# item (charter 3.7). It is zero here because no system has been run against this
+# dataset, so no measured cost per item exists. The scorer therefore reports net cost
+# as labour only, and says so on every table.
+
+machine_cost:
+  per_item_inr:
+    value: 0.00
+    status: "placeholder — replace after a run"
+    basis: >
+      Zero, not estimated. Charter 3.1.8 forbids filling an unrun figure with a
+      plausible number. Set this from a measured run and the net cost tables include
+      it; leave it at zero and every net cost figure is labour only.
+  per_item_usd:
+    value: 0.00
+    status: "placeholder — replace after a run"
+    basis: "As above."
+
+# ---------------------------------------------------------------------------
+# Reviewer minutes per exception
+# ---------------------------------------------------------------------------
+# Charter 3.16. The unit is one exception brought to a final state. Minutes are
+# active reviewer time, not queue age. They are stated per exception type and per
+# tier, because a low-confidence check on a one-to-one match and a many-to-many
+# reconciliation with an order-dependent rule are different pieces of work.
+#
+# `base_minutes` is the modelled active time for a tier-1 item of that exception
+# type. `tier_multiplier` scales it by the tier of the item. The scorer multiplies
+# the two and reports the mean and the median by queue entry code.
+
+reviewer_minutes:
+  tier_multiplier:
+    basis: >
+      Modelling assumption. The multipliers rise with the tier because the charter's
+      tier definitions (section 4.4) add a source, remove the key, widen the match
+      cardinality and add an interacting tolerance rule at each step, and each of
+      those adds a lookup a reviewer has to perform. The shape is a design decision,
+      not a measurement, and a partner replacing these with its own observed times
+      should expect a different shape.
+    t1: 1.00
+    t2: 1.35
+    t3: 1.90
+    t4: 2.70
+    t5: 3.60
+
+  exception_types:
+
+    # --- Support ticket triage ---
+    ticket_low_confidence:
+      work_type: ticket_triage
+      entry_codes: [LOWCONF]
+      base_minutes: 2.0
+      basis: >
+        Modelling assumption. Read the ticket, confirm or change the proposed
+        category and priority, release. No external lookup at tier 1.
+    ticket_validation_failure:
+      work_type: ticket_triage
+      entry_codes: [VALFAIL]
+      base_minutes: 3.5
+      basis: >
+        Modelling assumption. A validation rule fired, so the reviewer reads the rule
+        as well as the ticket and records why the rule was overridden or upheld.
+    ticket_policy_flag:
+      work_type: ticket_triage
+      entry_codes: [FLAG]
+      base_minutes: 6.0
+      basis: >
+        Modelling assumption. A policy flag routes to a senior reviewer, who has to
+        read the policy the flag names before deciding. Longer than a category check
+        because the reading is the work.
+    ticket_processing_failure:
+      work_type: ticket_triage
+      entry_codes: [FAIL]
+      base_minutes: 1.5
+      basis: >
+        Modelling assumption. A processing failure is short: the reviewer confirms
+        the item is unprocessed and resubmits or handles it manually. Short does not
+        mean cheap, because the item still has to be done by hand afterwards, which
+        is counted in the manual-handling minutes below.
+    ticket_drift_review:
+      work_type: ticket_triage
+      entry_codes: [DRIFT]
+      base_minutes: 4.5
+      basis: >
+        Modelling assumption. A drift-flagged ticket is reviewed with the drift
+        hypothesis in mind, which means comparing it against the category definition
+        rather than only routing it.
+
+    # --- KYC cases ---
+    kyc_low_confidence:
+      work_type: kyc_case
+      entry_codes: [LOWCONF]
+      base_minutes: 6.0
+      basis: >
+        Modelling assumption. Open the case, compare the identity fields across the
+        sources the item names, record the decision with a reason code. Longer than a
+        ticket because the comparison is across documents, not within one text.
+    kyc_validation_failure:
+      work_type: kyc_case
+      entry_codes: [VALFAIL]
+      base_minutes: 9.0
+      basis: >
+        Modelling assumption. A validation rule failed on a document field, so the
+        reviewer re-reads the document and either corrects the extraction or requests
+        a new document from the file.
+    kyc_policy_flag:
+      work_type: kyc_case
+      entry_codes: [FLAG]
+      base_minutes: 18.0
+      basis: >
+        Modelling assumption. A sanctions, politically-exposed-person or adverse-media
+        flag is a senior-reviewer decision with a written rationale, and the rationale
+        is the slow part. This is the longest exception type in the model.
+      senior: true
+    kyc_processing_failure:
+      work_type: kyc_case
+      entry_codes: [FAIL]
+      base_minutes: 2.0
+      basis: "Modelling assumption. As ticket_processing_failure."
+    kyc_drift_review:
+      work_type: kyc_case
+      entry_codes: [DRIFT]
+      base_minutes: 11.0
+      basis: >
+        Modelling assumption. A drift-flagged KYC case is reviewed against the source
+        format that triggered the flag, which adds a comparison against the format
+        the system was built for.
+
+    # --- Invoice-to-purchase-order reconciliation ---
+    recon_low_confidence:
+      work_type: invoice_po_recon
+      entry_codes: [LOWCONF]
+      base_minutes: 4.0
+      basis: >
+        Modelling assumption. Open the proposed match, check the line amounts and
+        dates against the purchase order, accept or re-match.
+    recon_validation_failure:
+      work_type: invoice_po_recon
+      entry_codes: [VALFAIL]
+      base_minutes: 7.0
+      basis: >
+        Modelling assumption. A tolerance or three-way-match rule failed, so the
+        reviewer applies the rule by hand and records which line broke it.
+    recon_policy_flag:
+      work_type: invoice_po_recon
+      entry_codes: [FLAG]
+      base_minutes: 12.0
+      basis: >
+        Modelling assumption. A duplicate-payment or approval-limit flag goes to a
+        senior reviewer who checks the payment history before releasing.
+      senior: true
+    recon_processing_failure:
+      work_type: invoice_po_recon
+      entry_codes: [FAIL]
+      base_minutes: 2.0
+      basis: "Modelling assumption. As ticket_processing_failure."
+    recon_drift_review:
+      work_type: invoice_po_recon
+      entry_codes: [DRIFT]
+      base_minutes: 8.0
+      basis: >
+        Modelling assumption. A drift-flagged reconciliation is reviewed against the
+        vendor format that triggered the flag, which means opening the format
+        definition as well as the invoice.
+
+# Sampled-audit minutes. Charter 3.16.5 keeps these out of the reviewer-minutes
+# figure and reports them separately, because an audit is a measurement device rather
+# than a piece of production work.
+audit_minutes:
+  per_audited_item:
+    ticket_triage: 1.5
+    kyc_case: 4.0
+    invoice_po_recon: 3.0
+  basis: >
+    Modelling assumption. An audit is a confirmation read, shorter than a review,
+    because the audit reviewer is checking a released output rather than deciding it.
+
+# Manual handling after a processing failure. The item still has to be done, and the
+# minutes for doing it by hand are not the same as the minutes for triaging the
+# failure. Reported separately by the scorer so that a low FAIL exception cost cannot
+# hide the work the failure created.
+manual_handling_minutes:
+  ticket_triage: 5.0
+  kyc_case: 16.0
+  invoice_po_recon: 10.0
+  basis: >
+    Modelling assumption. The end-to-end time to complete one item entirely by hand,
+    with no system output to start from.
+
+# ---------------------------------------------------------------------------
+# Rework minutes per wrong automation
+# ---------------------------------------------------------------------------
+# Charter 3.15. Each error class states the route by which the error is found, the
+# minutes to detect it by that route, the minutes to correct it, and the minutes to
+# correct anything downstream that consumed it.
+#
+# Three classes below have `detection_route: none_within_window`. They carry no
+# minutes at all. Charter 3.15.3 is explicit: an error class with no detection route
+# inside the measurement window is reported as an open exposure count with the class
+# named, and is never assigned an estimated minute figure. Inventing a detection time
+# for an error nobody would find is the exact failure this benchmark exists to
+# expose, so the scorer counts these and refuses to price them.
+
+rework_minutes:
+  error_classes:
+
+    ticket_wrong_category:
+      work_type: ticket_triage
+      description: "Ticket routed to the wrong queue."
+      detection_route: "receiving queue rejects the ticket back to triage"
+      detect_minutes: 8.0
+      correct_minutes: 3.0
+      downstream_minutes: 0.0
+      basis: >
+        Modelling assumption. The detection minutes are the receiving agent's time to
+        read a ticket that is not theirs and send it back, not the elapsed time it
+        sat in the wrong queue. Elapsed time is queue age and is not labour.
+
+    ticket_wrong_priority:
+      work_type: ticket_triage
+      description: "Ticket given the wrong priority, so the service level clock is wrong."
+      detection_route: "service-level breach alert on the ticket"
+      detect_minutes: 5.0
+      correct_minutes: 2.0
+      downstream_minutes: 4.0
+      basis: >
+        Modelling assumption. Downstream minutes cover the service-level exception
+        note the BPO has to write for the client when a breach was caused by a
+        mis-priority rather than by capacity.
+
+    ticket_missed_escalation:
+      work_type: ticket_triage
+      description: >
+        A ticket that required escalation, for example a complaint with a regulatory
+        cue, was closed as routine.
+      detection_route: none_within_window
+      detect_minutes: null
+      correct_minutes: null
+      downstream_minutes: null
+      basis: >
+        No detection route within a monthly measurement window. Nothing in the
+        process looks for a complaint that was never raised as one. It surfaces, if
+        it surfaces at all, through a regulator, an ombudsman or the BPO's client,
+        outside the window and outside this model. Reported as an open exposure count
+        with the class named, per charter 3.15.3. It is not priced.
+
+    kyc_false_pass:
+      work_type: kyc_case
+      description: "A case that should have been referred or rejected was passed."
+      detection_route: none_within_window
+      detect_minutes: null
+      correct_minutes: null
+      downstream_minutes: null
+      basis: >
+        No detection route within a monthly measurement window. A false pass leaves
+        no trace in the process that produced it. It is found by a periodic file
+        review, a regulatory inspection or an event involving the account, all of
+        which sit outside the window. Reported as an open exposure count, not priced.
+        This is the single most expensive thing in a real back office and the model
+        deliberately shows it as uncosted rather than as cheap.
+
+    kyc_false_reject:
+      work_type: kyc_case
+      description: "A case that should have passed was rejected or referred."
+      detection_route: "applicant complaint or relationship-manager escalation"
+      detect_minutes: 12.0
+      correct_minutes: 9.0
+      downstream_minutes: 6.0
+      basis: >
+        Modelling assumption. Downstream minutes cover reinstating the application in
+        the onboarding system and the written response to the applicant.
+
+    kyc_wrong_refer_reason:
+      work_type: kyc_case
+      description: "Correct outcome, wrong reason code recorded against it."
+      detection_route: "second-line quality review"
+      detect_minutes: 6.0
+      correct_minutes: 4.0
+      downstream_minutes: 2.0
+      basis: >
+        Modelling assumption. A wrong reason code is cheap to correct and expensive to
+        leave, because the reason codes are what the periodic report is built from.
+
+    recon_wrong_match:
+      work_type: invoice_po_recon
+      description: "Invoice matched to the wrong purchase order."
+      detection_route: "period-end reconciliation of open purchase orders"
+      detect_minutes: 20.0
+      correct_minutes: 12.0
+      downstream_minutes: 8.0
+      basis: >
+        Modelling assumption. Detection is expensive because a wrong match is found by
+        working backwards from a purchase order that will not close, not by looking at
+        the invoice. Downstream minutes cover the journal correction.
+
+    recon_overpayment:
+      work_type: invoice_po_recon
+      description: "Tolerance applied in the wrong direction, so the supplier was overpaid."
+      detection_route: "supplier statement reconciliation"
+      detect_minutes: 25.0
+      correct_minutes: 15.0
+      downstream_minutes: 20.0
+      basis: >
+        Modelling assumption. Downstream minutes cover recovering the money, which is
+        a conversation rather than a correction, and which is why this class is the
+        most expensive priced class in the model.
+
+    recon_underpayment:
+      work_type: invoice_po_recon
+      description: "Tolerance applied in the wrong direction, so the supplier was underpaid."
+      detection_route: "supplier chase"
+      detect_minutes: 10.0
+      correct_minutes: 8.0
+      downstream_minutes: 5.0
+      basis: >
+        Modelling assumption. Cheaper to detect than an overpayment because the
+        supplier does the detecting.
+
+    recon_duplicate_post:
+      work_type: invoice_po_recon
+      description: "The same invoice posted twice."
+      detection_route: "duplicate-payment control report"
+      detect_minutes: 6.0
+      correct_minutes: 10.0
+      downstream_minutes: 12.0
+      basis: >
+        Modelling assumption. Cheap to detect, because a control exists that looks for
+        exactly this, and expensive to correct once payment has run.
+
+    recon_missed_exception:
+      work_type: invoice_po_recon
+      description: >
+        An invoice that should have been held as an exception was posted, and the
+        condition that should have held it leaves no downstream signal.
+      detection_route: none_within_window
+      detect_minutes: null
+      correct_minutes: null
+      downstream_minutes: null
+      basis: >
+        No detection route within a monthly measurement window. Reported as an open
+        exposure count with the class named, per charter 3.15.3. Not priced.
+
+# ---------------------------------------------------------------------------
+# Scoring parameters
+# ---------------------------------------------------------------------------
+# Design decisions of the suite, recorded here so that a reader can change one and
+# re-run rather than argue about it. These are parameters, not measurements.
+
+scoring:
+  confidence_thresholds: [0.80, 0.90, 0.95]
+  threshold_sweep:
+    start: 0.50
+    stop: 0.99
+    step: 0.01
+  audit_sample_rate:
+    value: 0.02
+    basis: >
+      Design decision. Two per cent of automated items are drawn into the sampled
+      audit. The audit is a measurement device: an audited item stays automated if
+      the audit changed nothing, and becomes an exception if it did, per charter
+      3.4.2 and 3.14.3.
+  senior_review_entry_codes: [FLAG]
+  rounding:
+    rates_decimal_places: 1
+    money_significant_figures: 4
+    minutes_decimal_places: 1
