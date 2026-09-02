@@ -1,0 +1,14 @@
+# Python bytecode, and the full ground truth.
+#
+# Everything else in this folder is either source or is rebuilt from the seed by the
+# commands in README.md. The manifest is committed, so a published result can be traced to
+# the exact items it scored, and so is the 100-item public sample, in parts — `sample/README.md`
+# says why and gives the hash to check a reassembly against.
+#
+# `ground-truth.jsonl` itself is 3,175,920 bytes and is rebuilt by
+# `python3 generate.py --seed 20260902`. Its SHA-256 is in the repository's `REGENERATED.md`,
+# and `manifest.json` names every item in it.
+__pycache__/
+*.pyc
+ground-truth.jsonl
+sample/ground-truth.jsonl
