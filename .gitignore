@@ -1,49 +1,49 @@
-# Generated artefacts. Every one is rebuilt from a published seed by the generator beside it,
-# so the repository carries the generators and the ground-truth schemas, not their output.
-# See each dataset's README for the command that reproduces it byte for byte.
+# Generated artefacts. Everything here is rebuilt from a seed with the commands in
+# README.md, so the repository holds no binaries. LAYOUT.md explains each exclusion and
+# gives the sizes, so the decision can be checked rather than trusted.
 
-# Rendered and degraded documents (messy-scan): ~2.1 GB
-datasets/messy-scan/documents/
+# Messy Scan: rendered documents and render intermediates. 1.4 GB and 373 MB.
 datasets/messy-scan/build/
-datasets/messy-scan/sample/
-datasets/messy-scan/private/
+datasets/messy-scan/documents/
+datasets/messy-scan/sample/documents/
+
+# Honest Containment: rendered audio. 79 MB. audio-manifest.jsonl carries the hashes.
+datasets/honest-containment/audio/
+
+# The private splits. Never published, at any size.
+datasets/*/private/
+
+# Working files a labeller produces. Labels are committed deliberately, not by accident.
+datasets/honest-containment/labelling/packets/
+datasets/honest-containment/labelling/labels-*.csv
+datasets/honest-containment/labelling/judge-agreement.json
+
+# The file a person fills with endpoints and key names. The example is committed instead.
+datasets/honest-containment/suite/config/agents.json
+
+# Large regenerable data files. Each is rebuilt from the seed by the script beside it, and
+# its size and SHA-256 are in REGENERATED.md so a rebuild can be checked. LAYOUT.md 2.6 says why.
 datasets/messy-scan/ground-truth.jsonl
 datasets/messy-scan/manifest.json
-
-# Synthesised audio and generated scenarios (honest-containment)
-datasets/honest-containment/audio/
-datasets/honest-containment/private/
-datasets/honest-containment/transcripts/
 datasets/honest-containment/scenarios.jsonl
+datasets/honest-containment/audio-specs.jsonl
 datasets/honest-containment/audio-manifest.jsonl
 datasets/honest-containment/manifest.json
-
-# Generated items (exception-economics)
-datasets/exception-economics/ground-truth.jsonl
-datasets/exception-economics/sample/
 datasets/exception-economics/manifest.json
+results/exception-economics-v1.0/drift.json
+results/honest-containment-v1.0/runs/*/run-1/contacts.jsonl
 
-# Build output and caches
-site/node_modules/
-site/.next/
-site/out/
-site/*.tsbuildinfo
-harness/src/*.egg-info/
-**/__pycache__/
-**/.pytest_cache/
+# Caches and build output
+__pycache__/
 *.pyc
+.pytest_cache/
+*.egg-info/
 .venv/
+venv/
+node_modules/
+.DS_Store
 
-# QA screenshots: regenerate with the site's screenshot script. Summaries live in site/qa/README.md.
-site/qa/*.png
-
-# Generated binaries. Each is built by the script beside it; sizes and hashes are in
-# REGENERATED.md so a rebuild can be checked rather than trusted.
-bakeoff/bakeoff-offer.docx
-bakeoff/bakeoff-scorecard.xlsx
-bakeoff/wordmark-3x.png
-notes/methodology-for-procurement.pdf
-notes/methodology-pdf-source/build/
-
-# Working notes for the agent that built this folder. Internal, not a deliverable.
-.agent-context.md
+# Anything that looks like a key, in case a local run writes one out
+.env
+.env.*
+*.pem

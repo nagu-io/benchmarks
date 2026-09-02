@@ -1,0 +1,162 @@
+name: Add a model or a system
+description: Ask for a model, document service, voice platform or pipeline to be scored.
+title: "Add: "
+labels: ["add-a-system"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Any system that can be reached through one of the harness adapters can be scored, and
+        it is scored by the same harness, from the same commit, with the same prompts, on the
+        same data as everything else in the table. That includes ours.
+
+        Before you fill this in: no suite has been run yet. Every row on every leaderboard
+        reads "not run" with its reason. Adding a system now adds a row that will read "not
+        run" until a person supplies an interface key and a spend cap. That is worth doing —
+        the roster is public and the reason is per system — but it is not the same as being
+        measured.
+
+  - type: input
+    id: system
+    attributes:
+      label: The system
+      description: The product or model, and the organisation behind it.
+      placeholder: <Vendor> <product>, by <organisation>
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of system
+      options:
+        - A model behind a provider interface
+        - A self-hosted model on an OpenAI-compatible endpoint
+        - A document service (extraction as a managed service)
+        - A voice or chat agent platform
+        - An end-to-end pipeline behind an HTTP endpoint
+    validations:
+      required: true
+
+  - type: dropdown
+    id: suites
+    attributes:
+      label: Which suite should it be scored on
+      multiple: true
+      options:
+        - Messy Scan
+        - Honest Containment
+        - Exception Economics
+        - Day-60
+    validations:
+      required: true
+
+  - type: dropdown
+    id: adapter
+    attributes:
+      label: Which adapter does it need
+      description: >-
+        `harness/src/entail_bench/data/models.yaml` lists the adapters that exist. If it
+        speaks a shape one of them already knows, adding it is a single row in that file.
+      options:
+        - An existing adapter — OpenAI-compatible chat completions
+        - An existing adapter — Anthropic messages
+        - An existing adapter — Google generateContent
+        - An existing adapter — AWS Textract
+        - An existing adapter — Azure Document Intelligence
+        - An existing adapter — Google Document AI
+        - An existing adapter — the generic HTTP endpoint contract
+        - A new adapter is needed
+        - I do not know
+    validations:
+      required: true
+
+  - type: textarea
+    id: interface
+    attributes:
+      label: How the harness reaches it
+      description: >-
+        The endpoint shape, the request and response format, and a link to the public API
+        documentation with the date you read it. For a new adapter, a recorded response we can
+        use as a test fixture is the most useful thing you can attach — with every identifier
+        and every customer detail replaced by synthetic values.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: The model version string
+      description: >-
+        Exactly as the provider reports it, or how to obtain it from a response. Every
+        published figure carries this string, because providers change models behind an
+        unchanged name.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: cost
+    attributes:
+      label: Who pays the interface cost of the run
+      description: >-
+        Three runs over a full set is real money. A vendor may fund the cost of running its
+        own system; if it does, the report header says so and nothing else changes. The vendor
+        sees its rows only through the pre-publication notice, at the same time as everyone
+        else. Notice is not approval.
+      options:
+        - Entailment Labs, from its own budget
+        - The vendor is offering to fund its own rows
+        - A third party is offering to fund it
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: prices
+    attributes:
+      label: Public list prices
+      description: >-
+        A link to the provider's own price page, and the date. Cost per document is computed
+        from public list prices on a stated date, with no negotiated discount and no
+        committed-use pricing, because a private rate is not reproducible by a reader.
+    validations:
+      required: true
+
+  - type: input
+    id: limits
+    attributes:
+      label: Rate limits
+      description: >-
+        Anything that would stop three runs over the full set at the default account tier.
+        A row that cannot complete three runs is published as "incomplete" with the reason,
+        and is never compared with a complete one.
+    validations:
+      required: false
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: Your affiliation with this system
+      placeholder: None, or "I work for <vendor>"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Before you open this
+      options:
+        - label: >-
+            I understand the same prompt goes to every system, that there is no per-system
+            tuning, no per-system few-shot selection and no post-processing that only one
+            system receives.
+          required: true
+        - label: >-
+            I understand that the result will be published whatever it is, that it cannot be
+            delayed, edited or vetoed, and that silence after the pre-publication notice is not
+            consent to anything except the schedule.
+          required: true
+        - label: >-
+            Anything I attach is synthetic or public. It contains no customer data, no
+            personal data and no confidential material.
+          required: true

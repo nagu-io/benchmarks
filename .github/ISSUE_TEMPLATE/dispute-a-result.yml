@@ -1,0 +1,135 @@
+name: Dispute a result
+description: Challenge a published figure, a definition, a price or a configuration.
+title: "Dispute: "
+labels: ["dispute"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Anyone may dispute any figure. The process is public and its outcomes are published
+        whichever way they go, including when we lose. A dispute about our own system's row
+        runs through the same steps and is marked a self-dispute.
+
+        The process and its time limits are in `charter/methodology.md` section 8.4. Nothing
+        leaves the disputes log, and a disputed row is marked "under dispute" while the rest
+        of the release stands.
+
+        A dispute needs the table, the row, the versions and what is wrong. Without those we
+        cannot re-run anything, and the dispute stalls at step 1.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of dispute is this
+      options:
+        - A defect — wrong ground truth
+        - A defect — a harness or scorer bug
+        - A defect — a wrong price or price list date
+        - A defect — a wrong model version string
+        - A defect — a misconfigured adapter or run configuration
+        - A disagreement with a definition, a denominator or an exclusion
+        - Something else
+    validations:
+      required: true
+
+  - type: dropdown
+    id: suite
+    attributes:
+      label: Suite
+      options:
+        - Messy Scan
+        - Honest Containment
+        - Exception Economics
+        - Day-60
+        - Applies to more than one suite
+    validations:
+      required: true
+
+  - type: input
+    id: table
+    attributes:
+      label: Which table
+      description: The file and heading, or the page and section on bench.entailmentlabs.com.
+      placeholder: results/exception-economics-v1.0/leaderboard.md — "Headline, at three confidence thresholds"
+    validations:
+      required: true
+
+  - type: input
+    id: row
+    attributes:
+      label: Which row and column
+      description: Name the system or line, and the column whose value you are disputing.
+      placeholder: Row "threshold 0.80", column "Rework min per 1,000 automated"
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Dataset and harness versions
+      description: >-
+        Printed in the header of every results table and in the "versions and hashes"
+        section of every suite page. A dispute against an unstated version cannot be re-run.
+      placeholder: dataset 1.0.0, harness 1.0.0, charter 1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: claim
+    attributes:
+      label: What is wrong
+      description: State the defect or the disagreement. One claim per issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: >-
+        For a defect: what you ran, what you got, and what you expected. Paste the command,
+        the output and the commit hash. For a wrong price: the provider's own page and the
+        date you read it. For a definition disagreement: which numerator, denominator or
+        exclusion, and what you say it should be.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: A different configuration, if you are proposing one
+      description: >-
+        If you say the row would be different under another configuration, give it in full.
+        Where a dispute names a different configuration we run both and publish both.
+    validations:
+      required: false
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: Your affiliation with the system in question
+      description: >-
+        State it plainly if you work for, sell, or are funded by the vendor whose row this
+        is. It does not weaken the dispute. Concealing it and having it emerge later does.
+      placeholder: None, or "I work for <vendor>"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Before you open this
+      options:
+        - label: >-
+            I have read the metric definition in `charter/methodology.md` section 3, including
+            its exclusions.
+          required: true
+        - label: >-
+            I understand that a row reading "not run" is not a figure and cannot be disputed as
+            one; if you believe a run was possible and was not made, say so under "what is
+            wrong".
+          required: true
+        - label: >-
+            This issue contains no confidential material, no personal data and no partner data.
+          required: true
