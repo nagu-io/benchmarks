@@ -1,0 +1,36 @@
+{
+  "suite": "honest-containment",
+  "dataset_version": "1.0.0",
+  "dataset_manifest_sha256": "6b337fc1d8c6f5e98bdeec7f2620ee312bc75409a6d1b19d8ba804b856afbc5f",
+  "harness_version": "1.0.0",
+  "harness_commit": "3f635110cb78f25cd6368fd3f27cec2222915f35",
+  "prompt_hashes": {
+    "customer-simulator.md": "d90b81164d909222",
+    "interface-addendum.md": "58f9eef50a5e050f",
+    "judge-escalation-quality.md": "c6cdeec084baa8cc",
+    "judge-policy-assertion.md": "1907115de1478ab5",
+    "judge-resolution.md": "7b8e1b69adc5969c",
+    "reference-agent.md": "1725886f19dc755d"
+  },
+  "agent": "general-llm",
+  "agent_display_name": "general model with the reference agent prompt",
+  "agent_kind": "general_llm",
+  "run_index": 1,
+  "customer_mode": "llm",
+  "judge_preflight": "required",
+  "turn_cap": 24,
+  "started_at": "2026-09-02T12:52:03+00:00",
+  "scenarios": 300,
+  "python": "3.11.15",
+  "price_list_date": "placeholder - the date the provider price lists were read, charter 5.5",
+  "preflight_failures": [
+    "no interface key: environment variable HC_GENERAL_LLM_KEY is not set for the agent model placeholder - model version string",
+    "customer model: no interface key: environment variable HC_CUSTOMER_KEY is not set for the customer model placeholder - model version string",
+    "judge model: no interface key: environment variable HC_JUDGE_KEY is not set for the judge model placeholder - model version string, must differ from every model under test"
+  ],
+  "publishable": true,
+  "self_test": false,
+  "status": "not_run",
+  "not_run_reason": "no interface key: environment variable HC_GENERAL_LLM_KEY is not set for the agent model placeholder - model version string; customer model: no interface key: environment variable HC_CUSTOMER_KEY is not set for the customer model placeholder - model version string; judge model: no interface key: environment variable HC_JUDGE_KEY is not set for the judge model placeholder - model version string, must differ from every model under test",
+  "ended_at": "2026-09-02T12:52:03+00:00"
+}
