@@ -34,7 +34,7 @@ pnpm data        # rebuild data/benchmarks.json from the repository root
 pnpm dev         # http://localhost:3000
 pnpm build       # prebuild runs pnpm data, then next build; static export into out/
 pnpm typecheck
-scripts/_serve.sh 3100          # serve out/ for QA
+bash scripts/_serve.sh 3100     # serve out/ for QA
 node scripts/_shot.mjs / /messy-scan/   # 1440px screenshots into qa/
 ```
 

@@ -6,8 +6,9 @@ Which folders of the internal working tree `10-benchmarks/` map to which paths i
 The rule behind every decision below: **anything that a seed and a script can rebuild does
 not go in git.** The repository holds what a reader has to trust — the generators, the
 schemas, the manifests, the hashes, the harness, the charter and the results — and nothing it
-can produce for itself. That is why a 2.1 GB working tree publishes as a repository of under
-two megabytes, and why a clone is enough to reproduce every published figure.
+can produce for itself. That is why a 2.1 GB working tree publishes as a repository of about
+two megabytes, and why a clone is enough to reproduce every published figure — including
+the site that displays them, whose source is in `site/`.
 
 ---
 
@@ -32,7 +33,10 @@ two megabytes, and why a clone is enough to reproduce every published figure.
 | `day-60/` | `day-60/` | Yes, whole — rubric, scripted incidents, scoresheet, self-assessment |
 | `results/` | `results/` | Yes, except the seven files in 2.6 — leaderboards, findings, definitions, reproduce, the run headers |
 | `notes/*.mdx`, `notes/release-checklist.md` | — | No. Research notes publish on the main site; the release checklist is internal |
-| `site/` | — | No. The site is deployed, not published as source, and its `repo-template/` is this file's own source |
+| `site/` | `site/` | Yes, except `repo-template/`, `qa/` and the generated `data/benchmarks.json`. The site claims that no figure on it is typed by hand; publishing its source is what lets a reader check that rather than take it on trust |
+| `site/repo-template/` | — | No. It is this file's own source, and the files it holds are already realised at the repository root; a second copy one directory down would be two files to keep in step |
+| `site/qa/` | — | No — several megabytes of PNG that `node scripts/_shot.mjs` reproduces |
+| `bakeoff/` | — | No. The bake-off kit is a commercial document set — a protocol, a scorecard, an SOW addendum and an offer — issued to a partner running a selection, not part of the benchmark anyone can reproduce. The protocol it applies is the charter, which is published in full |
 | `.agent-context.md`, `BENCHMARK-PACK.md` | — | No. Internal build instructions |
 
 Three files in this folder have no working-tree counterpart and are written for the public
@@ -200,8 +204,10 @@ contents are covered by `MANIFEST.md` in its dataset folder.
 | `datasets/` source, manifests, policies and labelling | 13 MB | 985 KB |
 | `charter/` | 142 KB | 142 KB |
 | `day-60/` | 75 KB | 75 KB |
+| `site/`, excluding `node_modules/` and build output | 12 MB | 177 KB — `qa/` is 12 MB of that, and `repo-template/` and the generated data file are out too |
+| `bakeoff/`, `notes/` | 535 KB | 0 — neither is published |
 
-Roughly 2.1 GB of working tree, of which about 1.8 MB is committed.
+Roughly 2.1 GB of working tree, of which about 1.9 MB is committed, across 274 files.
 
 ---
 
@@ -210,8 +216,8 @@ Roughly 2.1 GB of working tree, of which about 1.8 MB is committed.
 A checklist for whoever creates the repository. `notes/release-checklist.md` in the working
 tree carries the wider list; these are the items specific to the layout.
 
-1. Copy the paths in section 1, in that order. Do not copy `10-benchmarks/site/` or
-   `10-benchmarks/notes/`.
+1. Copy the paths in section 1, in that order. Copy `10-benchmarks/site/` but not its
+   `repo-template/` or `qa/`; do not copy `10-benchmarks/notes/` or `10-benchmarks/bakeoff/`.
 2. Copy the files in this folder to the repository root: `README.md`, `CONTRIBUTING.md`,
    `CODE_OF_CONDUCT.md`, `SECURITY.md`, `LICENSE`, `LICENSE-DATA`, `CITATION.cff`,
    `LAYOUT.md`, `.github/`, and `datasets/LICENSE`.
