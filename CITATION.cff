@@ -1,0 +1,61 @@
+cff-version: 1.2.0
+title: Entailment Labs benchmarks
+message: >-
+  If you use these datasets, the harness or any figure from these
+  leaderboards, please cite this repository. Cite the version you used:
+  a figure is only meaningful with the dataset and harness version that
+  produced it.
+type: dataset
+abstract: >-
+  Four benchmark suites for document extraction, voice and chat agents,
+  back-office automation and AI operations, built to measure the distance
+  between a vendor-deck number and a production number, with every metric
+  stated in definitions a business-process outsourcing company can write into
+  a statement of work. All data is synthetic. As at this version no suite has
+  been run against any system, and every results row reads "not run" with the
+  reason.
+authors:
+  - name: Entailment Labs
+    city: Surat
+    region: Gujarat
+    country: IN
+    website: "https://entailmentlabs.com"
+    email: hello@entailmentlabs.com
+repository-code: "https://github.com/nagu-io/benchmarks"
+url: "https://bench.entailmentlabs.com"
+license: CC-BY-4.0
+license-url: "https://creativecommons.org/licenses/by/4.0/legalcode"
+version: 1.0.0
+date-released: "2026-09-02"
+keywords:
+  - benchmark
+  - document intelligence
+  - information extraction
+  - conversational agents
+  - containment
+  - business process outsourcing
+  - evaluation methodology
+  - synthetic data
+references:
+  - type: report
+    title: Benchmark charter and methodology
+    version: 1.0.0
+    authors:
+      - name: Entailment Labs
+    year: 2026
+    notes: >-
+      charter/methodology.md in this repository. Defines every metric, its
+      numerator, its denominator and its exclusions, the difficulty tiers, the
+      neutrality rules, the data ethics, the versioning scheme, the disputes
+      process and the limitations. A figure from these suites should be quoted
+      with the charter version in force when it was produced.
+  - type: report
+    title: Benchmark contract clauses
+    version: 1.0.0
+    authors:
+      - name: Entailment Labs
+    year: 2026
+    notes: >-
+      charter/contract-clauses.md in this repository. Clause language for each
+      metric, for use in a statement of work or a service schedule. Drafting,
+      not legal advice, and not reviewed by a lawyer.

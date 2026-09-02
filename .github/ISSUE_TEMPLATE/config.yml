@@ -1,0 +1,17 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/nagu-io/benchmarks/security/advisories/new
+    about: >-
+      Do not open a public issue for a vulnerability. Use a private security advisory, or
+      write to security@entailmentlabs.com. SECURITY.md has the details.
+  - name: A generated name collides with a real person or company
+    url: mailto:hello@entailmentlabs.com
+    about: >-
+      Write to us. We remove the item in the next dataset version and record the removal in
+      the changelog, without an argument about likelihood.
+  - name: The methodology, in full
+    url: https://bench.entailmentlabs.com/methodology
+    about: >-
+      Every metric with its formula, numerator, denominator and exclusions; the tier schemes;
+      the neutrality rules; the limitations. Most questions are answered here.
