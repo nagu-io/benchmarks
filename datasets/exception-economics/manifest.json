@@ -1,0 +1,204 @@
+{
+  "baseline_categories": {
+    "kyc_sources": [
+      "national_id",
+      "passport",
+      "utility_bill",
+      "bank_statement",
+      "company_register_extract",
+      "screening_list"
+    ],
+    "ticket_categories": [
+      "billing_dispute",
+      "delivery_delay",
+      "password_reset",
+      "refund_request",
+      "product_defect",
+      "address_change",
+      "subscription_cancel",
+      "order_status",
+      "warranty_claim",
+      "account_access"
+    ],
+    "vendor_formats": [
+      "pdf_line_item",
+      "csv_flat",
+      "edi_810",
+      "portal_export",
+      "email_body_table"
+    ]
+  },
+  "charter_version": "1.0.0",
+  "dataset": "exception-economics",
+  "dataset_version": "1.0.0",
+  "drift_sample_size": 600,
+  "drift_steps": [
+    {
+      "day": 0,
+      "label": "acceptance baseline",
+      "note": "The acceptance measurement. No shifted items, baseline work mix.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.35,
+        "kyc_case": 0.25,
+        "ticket_triage": 0.4
+      },
+      "shifted_share": 0.0
+    },
+    {
+      "day": 15,
+      "label": "first new vendor formats",
+      "note": "Two vendors move to a consolidated statement format.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.36,
+        "kyc_case": 0.25,
+        "ticket_triage": 0.39
+      },
+      "shifted_share": 0.05
+    },
+    {
+      "day": 30,
+      "label": "new ticket categories appear",
+      "note": "A product launch introduces ticket categories with no labelled example.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.34,
+        "kyc_case": 0.24,
+        "ticket_triage": 0.42
+      },
+      "shifted_share": 0.1
+    },
+    {
+      "day": 45,
+      "label": "shift established",
+      "note": "The new formats and categories are now routine traffic.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.34,
+        "kyc_case": 0.24,
+        "ticket_triage": 0.42
+      },
+      "shifted_share": 0.16
+    },
+    {
+      "day": 60,
+      "label": "onboarding season begins",
+      "note": "Seasonal mix moves towards KYC as onboarding volume rises.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.32,
+        "kyc_case": 0.32,
+        "ticket_triage": 0.36
+      },
+      "shifted_share": 0.23
+    },
+    {
+      "day": 75,
+      "label": "period-end volume",
+      "note": "Period-end pushes reconciliation volume up.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.38,
+        "kyc_case": 0.29,
+        "ticket_triage": 0.33
+      },
+      "shifted_share": 0.3
+    },
+    {
+      "day": 90,
+      "label": "ninety-day measurement",
+      "note": "The ninety-day endpoint required by charter 3.17.",
+      "seasonal_weights": {
+        "invoice_po_recon": 0.39,
+        "kyc_case": 0.28,
+        "ticket_triage": 0.33
+      },
+      "shifted_share": 0.38
+    }
+  ],
+  "generator_version": "1.0.0",
+  "ground_truth_file": "ground-truth.jsonl",
+  "ground_truth_sha256": "49af7a5ee30fb3fcdd458458c4194ec2ff9409d96e0ff432556cedf8580e5733",
+  "items": 2000,
+  "lifecycle_counts": {
+    "admitted": 1892,
+    "in_flight": 25,
+    "pre_processing_rejected": 57,
+    "upstream_failure": 26
+  },
+  "populations": {
+    "baseline": 1700,
+    "shifted": 300
+  },
+  "reference_policy_parameters": {
+    "note": "Parameters of the synthetic decision-policy stand-in. Not a claim about any model.",
+    "p_correct_by_tier": {
+      "1": 0.985,
+      "2": 0.96,
+      "3": 0.9,
+      "4": 0.78,
+      "5": 0.62
+    },
+    "p_flag_by_tier": {
+      "1": 0.005,
+      "2": 0.01,
+      "3": 0.02,
+      "4": 0.04,
+      "5": 0.07
+    },
+    "p_in_flight": 0.012,
+    "p_pre_processing_reject": 0.03,
+    "p_processing_failure": 0.015,
+    "p_upstream_failure": 0.01,
+    "p_valfail_by_tier": {
+      "1": 0.01,
+      "2": 0.025,
+      "3": 0.045,
+      "4": 0.075,
+      "5": 0.11
+    },
+    "shifted_correctness_multiplier": 0.7
+  },
+  "schema_version": "1.0",
+  "seed": 20260902,
+  "shift_drivers": {
+    "new_kyc_source": 70,
+    "new_ticket_category": 110,
+    "new_vendor_format": 120
+  },
+  "split_counts": {
+    "open": 1600,
+    "private_holdout": 300,
+    "public_sample": 100
+  },
+  "synthetic": true,
+  "tier_counts": {
+    "1": 340,
+    "2": 425,
+    "3": 425,
+    "4": 340,
+    "5": 470
+  },
+  "unseen_categories": {
+    "kyc_sources": [
+      "digital_identity_wallet",
+      "municipal_residence_certificate",
+      "cross_border_registry_api"
+    ],
+    "ticket_categories": [
+      "loyalty_points_transfer",
+      "installer_scheduling",
+      "regulatory_data_request",
+      "trade_in_valuation"
+    ],
+    "vendor_formats": [
+      "consolidated_statement_pdf",
+      "milestone_billing_xml",
+      "marketplace_settlement_json"
+    ]
+  },
+  "window": {
+    "days": 30,
+    "start": "2026-04-01"
+  },
+  "work_type_counts": {
+    "invoice_po_recon": 715,
+    "kyc_case": 495,
+    "ticket_triage": 790
+  }
+}
