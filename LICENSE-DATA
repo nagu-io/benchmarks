@@ -1,0 +1,43 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Entailment Labs
+
+The data in this repository is licensed under the Creative Commons Attribution
+4.0 International licence.
+
+Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+Summary:   https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt the material for any purpose, including
+commercially, provided you give appropriate credit, link to the licence, and
+indicate if changes were made.
+
+Attribution: Entailment Labs benchmarks, <suite> dataset v<version>.
+Machine-readable citation: CITATION.cff.
+
+----------------------------------------------------------------------------
+
+WHAT THIS COVERS
+
+Ground-truth files, dataset manifests, datasheets, policy packs, transcripts,
+audio specifications and audio manifests, labelling guides and label files,
+the Day-60 rubric and scoresheet, and everything under `results/`.
+
+WHAT IT DOES NOT COVER
+
+The code, which is MIT. See `LICENSE`.
+
+The private splits. They are not published, are not in this repository, and
+are not licensed to anyone. They exist to detect tuning against the public
+sets.
+
+NOTE ON THE DATA ITSELF
+
+Every item is synthetic. Nothing was scraped, nothing was copied from a real
+document, and no real invoice, statement, claim form, transcript or recording
+entered any set. Identifiers that resemble government or financial identifiers
+are format-valid and checksum-invalid by construction, so that nothing here
+can resolve to a real person or account.
+
+Charter section 6, in `charter/methodology.md`, governs how the data was made
+and what it is not suitable for.
