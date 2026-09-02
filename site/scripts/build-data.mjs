@@ -421,15 +421,104 @@ function crossTab(records, tierOf, langOf) {
   };
 }
 
+/**
+ * Fallbacks for a checkout that does not carry the regenerated data files.
+ *
+ * `ground-truth.jsonl`, `scenarios.jsonl` and the sample splits are rebuilt from a seed
+ * rather than committed (LAYOUT 2.6), so a build from a clone of the public repository has
+ * no line-level file to count. The manifests and datasheets ARE committed and carry the
+ * same counts, so the counts come from those instead. A build beside the full working tree
+ * still reads the ground truth and is unchanged.
+ *
+ * Without this the site said "not a dataset" for all three suites on a clone, which is
+ * false: the datasets exist, and the repository documents them. `countedFrom` records which
+ * of the two routes produced the figures, and the pages print it.
+ */
+
+/** A table's rows as [firstCell, number] pairs, for the count tables in the datasheets. */
+function countsFromTable(table, keyCol, valueCol) {
+  const out = [];
+  for (const r of table?.rows ?? []) {
+    const key = (r[keyCol] ?? "").replace(/[`*]/g, "").trim();
+    const n = Number((r[valueCol] ?? "").replace(/[^0-9]/g, ""));
+    if (key && Number.isFinite(n) && n > 0) out.push([key, n]);
+  }
+  return out;
+}
+
+const MESSY_SCAN_LANGUAGE_KEYS = {
+  "English only": "en",
+  "English and Hindi": "en+hi",
+  "English and Gujarati": "en+gu",
+  "English and Tagalog": "en+tl",
+};
+
+/** Messy Scan from MANIFEST.md and datasheet.md, when ground-truth.jsonl is absent. */
+function messyScanFromDocs() {
+  const man = readText("datasets/messy-scan/MANIFEST.md");
+  const sheet = readText("datasets/messy-scan/datasheet.md");
+  if (!man || !sheet) return { present: false };
+  const manBlocks = toBlocks(man);
+  const sheetBlocks = toBlocks(sheet);
+
+  const splits = countsFromTable(
+    findTable(manBlocks, (h) => h[0] === "Split" && h[1] === "Documents"), 0, 1,
+  );
+  const tiers = countsFromTable(
+    findTable(sheetBlocks, (h) => h[0] === "Tier" && h.includes("Documents")), 0, 3,
+  );
+  const langs = countsFromTable(
+    findTable(sheetBlocks, (h) => h[0] === "Languages on the page"), 0, 1,
+  );
+  const types = countsFromTable(
+    findTable(sheetBlocks, (h) => h[0] === "Type" && h[1] === "Subtype"), 1, 2,
+  ).filter(([k]) => k.toLowerCase() !== "total");
+
+  if (!tiers.length) return { present: false };
+  const total = tiers.reduce((n, [, c]) => n + c, 0);
+  const version = /Dataset version (\S+)/.exec(man)?.[1] ?? null;
+  const seed = Number(/Seed (\d+)/.exec(man)?.[1] ?? "") || null;
+  const bySplit = Object.fromEntries(splits);
+
+  return {
+    present: true,
+    countedFrom: "MANIFEST.md and datasheet.md",
+    version,
+    seed,
+    unit: "document",
+    unitPlural: "documents",
+    path: "datasets/messy-scan",
+    samplePath: "datasets/messy-scan/sample",
+    sampleCount: bySplit.public_sample ?? null,
+    privateCount: bySplit.private_holdout ?? null,
+    splits: splits.map(([key, count]) => ({ key, count })),
+    types: types.map(([key, count]) => ({ key, count })),
+    // No per-cell breakdown is published, so the tier and language counts stand alone and
+    // the cross-tab carries no cells. The filter then reports a tier or a language total
+    // rather than an invented intersection.
+    cross: {
+      total,
+      tiers: tiers.map(([key, count]) => ({ key: `T${key}`, label: `T${key}`, count })),
+      languages: langs.map(([key, count]) => ({
+        key: MESSY_SCAN_LANGUAGE_KEYS[key] ?? key,
+        label: key,
+        count,
+      })),
+      cells: {},
+    },
+  };
+}
+
 function datasetMessyScan() {
   const gt = readLines("datasets/messy-scan/ground-truth.jsonl");
-  if (!gt) return { present: false };
+  if (!gt) return messyScanFromDocs();
   const records = gt.map((l) => JSON.parse(l));
   const sample = readLines("datasets/messy-scan/sample/ground-truth.jsonl");
   const priv = readLines("datasets/messy-scan/private/ground-truth.jsonl");
   const first = records[0] ?? {};
   return {
     present: true,
+    countedFrom: "ground-truth.jsonl",
     version: first.dataset_version ?? null,
     seed: first.seed ?? null,
     unit: "document",
@@ -448,14 +537,48 @@ function datasetMessyScan() {
   };
 }
 
+/** Honest Containment from manifest.json, when scenarios.jsonl is absent. */
+function honestContainmentFromManifest(manifest) {
+  const mix = manifest.mix ?? {};
+  const counts = manifest.counts ?? {};
+  const tiers = Object.entries(mix.tier ?? {}).map(([key, count]) => ({ key, label: key, count }));
+  const languages = Object.entries(mix.language ?? {}).map(([key, count]) => ({
+    key,
+    label: LANGUAGE_LABELS[key] ?? key,
+    count,
+  }));
+  return {
+    present: true,
+    countedFrom: "manifest.json",
+    version: manifest.dataset_version ?? null,
+    seed: manifest.seed ?? null,
+    unit: "contact",
+    unitPlural: "contacts",
+    path: "datasets/honest-containment",
+    samplePath: "datasets/honest-containment",
+    sampleCount: counts.scenarios_public ?? null,
+    privateCount: counts.scenarios_private ?? null,
+    splits: [],
+    types: Object.entries(mix.domain ?? {}).map(([key, count]) => ({ key, count })),
+    audio: counts.audio_selected ?? null,
+    // The manifest publishes each dimension's totals, not their intersection, so the
+    // cross-tab carries no cells and a two-way filter reports no count rather than a guess.
+    cross: { total: counts.scenarios_public ?? null, tiers, languages, cells: {} },
+  };
+}
+
 function datasetHonestContainment() {
   const lines = readLines("datasets/honest-containment/scenarios.jsonl");
   const manifest = readJson("datasets/honest-containment/manifest.json");
-  if (!lines || !manifest) return { present: false };
+  if (!manifest) return { present: false };
+  // scenarios.jsonl is rebuilt rather than committed, so on a clone the counts come from
+  // manifest.json, which carries the same mix tables the records would have been tallied into.
+  if (!lines) return honestContainmentFromManifest(manifest);
   const records = lines.map((l) => JSON.parse(l));
   const sample = readLines("datasets/honest-containment/private/scenarios.jsonl");
   return {
     present: true,
+    countedFrom: "scenarios.jsonl",
     version: manifest.dataset_version ?? null,
     seed: manifest.seed ?? null,
     unit: "contact",
@@ -475,14 +598,49 @@ function datasetHonestContainment() {
   };
 }
 
+/** Exception Economics from manifest.json, when ground-truth.jsonl is absent. */
+function exceptionEconomicsFromManifest(manifest) {
+  const splits = manifest.split_counts ?? {};
+  return {
+    present: true,
+    countedFrom: "manifest.json",
+    version: manifest.dataset_version ?? null,
+    seed: manifest.seed ?? null,
+    unit: "work item",
+    unitPlural: "work items",
+    path: "datasets/exception-economics",
+    samplePath: "datasets/exception-economics/sample",
+    sampleCount: splits.public_sample ?? null,
+    privateCount: splits.private_holdout ?? null,
+    splits: Object.entries(splits).map(([key, count]) => ({ key, count })),
+    types: Object.entries(manifest.work_type_counts ?? {}).map(([key, count]) => ({ key, count })),
+    groundTruthSha: manifest.ground_truth_sha256 ?? null,
+    populations: manifest.populations ?? null,
+    lifecycle: manifest.lifecycle_counts ?? null,
+    cross: {
+      total: manifest.items ?? null,
+      tiers: Object.entries(manifest.tier_counts ?? {}).map(([key, count]) => ({
+        key: `T${key}`,
+        label: `T${key}`,
+        count,
+      })),
+      languages: [{ key: "not-applicable", label: "not-applicable", count: manifest.items ?? null }],
+      cells: {},
+    },
+  };
+}
+
 function datasetExceptionEconomics() {
   const manifest = readJson("datasets/exception-economics/manifest.json");
   const lines = readLines("datasets/exception-economics/ground-truth.jsonl");
-  if (!manifest || !lines) return { present: false };
+  if (!manifest) return { present: false };
+  // As above: the ground truth is rebuilt, and manifest.json carries every count it holds.
+  if (!lines) return exceptionEconomicsFromManifest(manifest);
   const records = lines.map((l) => JSON.parse(l));
   const sample = readLines("datasets/exception-economics/sample/ground-truth.jsonl");
   return {
     present: true,
+    countedFrom: "ground-truth.jsonl",
     version: manifest.dataset_version ?? null,
     seed: manifest.seed ?? null,
     unit: "work item",
