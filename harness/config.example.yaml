@@ -1,0 +1,89 @@
+# entail-bench configuration
+#
+# Copy to entail-bench.yaml and edit. Every value here can be overridden on the
+# command line. `entail-bench validate-config` checks it without running
+# anything.
+
+suite: messy-scan
+
+# The dataset folder. Point this at your own documents to run the same harness
+# on your own material: --dataset ./their-folder, or set it here. The folder
+# needs a ground-truth.jsonl and a documents/ tree; see README.md.
+dataset: ../datasets/messy-scan
+split: public_sample            # public_sample | private_holdout | all
+
+# The prompt file. The same prompt goes to every model. `prompt_dir` is only
+# needed if the prompts do not sit in a prompts/ folder beside this file.
+prompt: messy-scan-v1.0.0.md
+# prompt_dir: ./prompts
+
+prices: ./prices.yaml
+out: ./results
+
+# Charter 3.1.4: three runs per model per suite at identical settings. A row
+# with fewer is marked incomplete and is not promoted into a headline table.
+runs: 3
+
+# Spend control. The run stops and reports when the projected cost from
+# prices.yaml would exceed this. Leave null to run without a cap; a cap can only
+# be enforced once prices.yaml carries verified list prices.
+spend_cap: null
+
+models:
+  # model_id is the provider's own identifier for the version you are scoring.
+  # It is deliberately not defaulted: which model version is in scope is a
+  # decision a person makes before a run.
+  - name: openai
+    model_id: null              # placeholder — the model identifier you are scoring
+  - name: anthropic
+    model_id: null              # placeholder
+  - name: google
+    model_id: null              # placeholder
+  - name: mistral
+    model_id: null              # placeholder
+  - name: local-vllm
+    model_id: null              # placeholder — the model your server serves
+  - name: aws-textract
+  - name: azure-document-intelligence
+    model_id: prebuilt-document
+  - name: google-document-ai
+  - name: entail-pipeline
+
+scoring:
+  # The review-queue threshold. The exception rate is a function of it and moves
+  # the moment it does, so it is printed with every exception figure.
+  confidence_threshold: 0.85
+  # Ten equal-width bins is the charter default. Any other binning is stated
+  # with the figure, because the bin count changes the number.
+  calibration_bins: 10
+  # Sampled-audit rate. An audited document is straight-through only if the
+  # audit changed nothing (charter 3.4.2).
+  audit_rate: 0.0
+  audit_seed: entail-bench
+  # Charter 3.3.2 compares an amount as a numeric value plus a currency code.
+  # With this true, a money field returned with no currency anywhere in the
+  # reply is incorrect, and the count of such instances is reported.
+  currency_required: true
+  numeric_tolerance: null
+  # all | none. With `all`, a schema field the system did not return at all is a
+  # validation failure, which is what a production schema check does.
+  required_fields: all
+  validation: true
+
+adapter_options:
+  max_output_tokens: 4096
+  temperature: 0
+  timeout_s: 180
+  max_retries: 2
+  retry_backoff_s: 1.0
+  image_detail: high
+
+# Documents rejected before processing by a named pre-processing rule. Both
+# counts are reported, so the effect of the admission rule on the rate is
+# visible (charter 3.4.3). Empty by default: nothing is dropped.
+admission:
+  reject_rules: []
+  # - name: "bundles over ten pages"
+  #   field: page_count
+  #   op: gt
+  #   value: 10

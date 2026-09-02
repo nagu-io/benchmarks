@@ -1,0 +1,138 @@
+# Price list — entail-bench
+#
+# Charter section 3.7.2: charges are taken from published list prices on a
+# stated date, and the price list date is printed with every cost figure.
+# Charter section 9.4: list prices move, no negotiated discount or committed-use
+# rate is included, and a reader must re-price before a cost figure enters a
+# business case.
+#
+# EVERY FIGURE BELOW IS A PLACEHOLDER TO VERIFY. Nothing here was read from a
+# provider's price page, and nothing here was invented to look plausible. Until
+# a person fills these in from the provider's own published page and sets
+# `verified: true` with the date they read it, `entail-bench` reports cost as
+# `not priced` and refuses to enforce a spend cap.
+#
+# How to fill this in
+#   1. Open the provider's published price page.
+#   2. Copy the list price into the row, in the currency named below.
+#   3. Put the page URL in source_url and the date you read it in verified_on.
+#   4. Set verified: true on that row.
+#   5. Set price_list_date at the top to the date you read the prices.
+# The report prints price_list_date, and each row's source_url and verified_on,
+# beside every cost figure.
+
+version: "1.0.0"
+currency: USD
+price_list_date: null          # placeholder — the date the prices were read
+price_list_note: >-
+  Published list prices only. No negotiated discount, no committed-use rate, no
+  private rate, no caching effect. Charter section 3.7.4.
+
+# Per-million-token prices for models billed on tokens.
+providers:
+  openai:
+    billing: per_million_tokens
+    verified: false
+    input: null                # placeholder — verify on the provider's price page
+    output: null               # placeholder — verify
+    reasoning: null            # placeholder — verify, where billed separately
+    source_url: null           # placeholder — the provider's published price page
+    verified_on: null
+
+  anthropic:
+    billing: per_million_tokens
+    verified: false
+    input: null                # placeholder — verify
+    output: null               # placeholder — verify
+    reasoning: null            # placeholder — verify, where billed separately
+    source_url: null
+    verified_on: null
+
+  google:
+    billing: per_million_tokens
+    verified: false
+    input: null                # placeholder — verify
+    output: null               # placeholder — verify
+    reasoning: null            # placeholder — verify, where billed separately
+    source_url: null
+    verified_on: null
+
+  mistral:
+    billing: per_million_tokens
+    verified: false
+    input: null                # placeholder — verify
+    output: null               # placeholder — verify
+    reasoning: null
+    source_url: null
+    verified_on: null
+
+  # Self-hosted models are not billed per token. Charter section 3.7.2: the
+  # compute rate stated here is multiplied by the measured occupancy, which the
+  # harness takes from the run's own wall-clock time on the serving instance.
+  self_hosted_compute:
+    billing: per_instance_hour
+    verified: false
+    instance_type: null        # placeholder — the instance you serve on
+    hourly_rate: null          # placeholder — verify on the cloud provider's page
+    concurrency: 1             # requests served in parallel during the run
+    source_url: null
+    verified_on: null
+
+# Document services are billed per page, not per token.
+  aws_textract:
+    billing: per_page
+    verified: false
+    per_page: null             # placeholder — verify, and note which feature set
+    features_note: >-
+      Textract prices differ by feature. Record the price for the feature set the
+      adapter sends: QUERIES, FORMS and TABLES.
+    source_url: null
+    verified_on: null
+
+  azure_document_intelligence:
+    billing: per_page
+    verified: false
+    per_page: null             # placeholder — verify, for the model you call
+    features_note: >-
+      Prices differ between prebuilt, layout and custom models. Record the price
+      for the model_id in your config.
+    source_url: null
+    verified_on: null
+
+  google_document_ai:
+    billing: per_page
+    verified: false
+    per_page: null             # placeholder — verify, for the processor you call
+    features_note: >-
+      Prices differ by processor. Record the price for the processor named in
+      GOOGLE_DOCAI_PROCESSOR.
+    source_url: null
+    verified_on: null
+
+  # Any IDP vendor, and our own pipeline, through the HTTP endpoint adapter.
+  http_endpoint:
+    billing: per_document
+    verified: false
+    per_document: null         # placeholder — the rate in your own contract
+    source_url: null
+    verified_on: null
+
+  entail_pipeline:
+    billing: per_document
+    verified: false
+    per_document: null         # placeholder — our own cost, to be supplied
+    source_url: null
+    verified_on: null
+
+# Charges the cost figure includes and excludes, restated here so the file is
+# self-describing. Charter section 3.7.
+included:
+  - input, output and separately billed reasoning tokens
+  - per-page and per-request charges for document services
+  - charges for retries and for calls that failed and were repeated
+  - the compute rate multiplied by the measured occupancy, for a self-hosted model
+excluded:
+  - human review labour, measured separately under charter section 3.16
+  - one-off build and integration cost
+  - the cost of running the harness itself
+  - negotiated discounts, committed-use pricing and any private rate
