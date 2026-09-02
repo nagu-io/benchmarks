@@ -1,0 +1,8 @@
+{
+  "label_resolved": "yes | no | ambiguous",
+  "label_escalation_required_met": "yes | no | not_applicable",
+  "label_escalation_destination_ok": "yes | no | not_applicable",
+  "label_unsupported_assertion": "yes | no",
+  "label_unsupported_class": "financial_or_entitlement | regulated_disclosure | procedural | incidental | none",
+  "label_handover_quality": "clean | adequate | poor | not_applicable"
+}
