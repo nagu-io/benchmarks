@@ -51,3 +51,4 @@ Sorted on containment under charter 3.9.1. Our own system sits where the sort pu
 ## Judge agreement
 
 Unmeasured. The 60-case adjudication set is selected and the kappa computation is written, and neither can produce a figure until a run has produced transcripts and two people have labelled them. Charter section 5.9 requires the caveat on every table that depends on the judge, and it applies to every containment, false containment and hallucinated-policy figure this suite will publish.
+

@@ -110,3 +110,4 @@ The table below is not a result and no system produced it. It is arithmetic over
 Read the row for definition D at 24 hours against the row for ours. On this dataset a policy-perfect agent is contained on 96.0 percent of contacts under definition D at 24 hours and on 38.7 percent under ours. The agent is the same agent. The contacts are the same contacts. Only the definition moved.
 
 The reason is in the construction: 172 of the 300 contacts require a person under the policy packs, and a correct transfer is not containment under our definition or under A, B or C, while it is containment under D. See `why-90-percent-is-65.md` for the same point worked through from the definitions alone.
+
